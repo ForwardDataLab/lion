@@ -1,0 +1,20 @@
+1. Run "composer require socialiteproviders/github"
+
+2. Add  'SocialiteProviders\Github\GithubExtendSocialite@handle' to EventServiceProvider.php
+(https://socialiteproviders.netlify.com/providers/git-hub.html)
+
+3. Add entry to config/services.php and add new source to providers array
+
+4. Add developer account on github
+
+5. add client_id, secret, redirect URI to .env
+
+6. Add github to authorizeProvider 
+
+7. Add github to createAuthorization
+
+8. Add graphql server on lion
+    -graphql schema stored in db as big json
+    -when submitting query, the current schema is compared to all other schemas to get the server id
+
+

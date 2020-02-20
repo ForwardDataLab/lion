@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%; height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Project Lion frontend"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!--TODO: Add CSRF Token-->
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-weight: 400;
+        }
+        .nav-button {
+            margin: 0 0.5rem;
+            padding: 0.5rem 0.75rem;
+            color: #616161;
+            font-weight: 400;
+            cursor: pointer;
+        }
+        .nav-button:hover {
+            background: rgb(245, 245, 245);
+        }
+        .nav-button:active {
+            color: #0d47a1;
+        }
+        .nav-button.active {
+            color: #0d47a1;
+            border-bottom: 2px solid #002171;
+        }
+        .nav-button-end:hover {
+            background: #002171;
+        }
+        .nav-button-end {
+            margin: 0;
+            color: white;
+            background: #0d47a1;
+            border-radius: 0.1rem;
+        }
+        .nav-button-end:active {
+            color: #002171;
+        }
+        .section-hidden {
+            display: none !important;
+        }
+        .section {
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 2rem;
+        }
+        .title {
+            font-weight: 500;
+            font-size: 2rem;
+            color: #424242;
+            display: inline-block;
+            margin: 0 0 0 1rem;
+        }
+        .card {
+            border-radius: 0.2rem;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            padding: 1rem 2rem;
+            margin: 1rem auto 2rem auto;
+        }
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            margin: 1rem 0 2rem 0;
+        }
+        .form-field-aux {
+            color: #424242;
+            margin-top: 0.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .form-row label {
+            font-weight: 500;
+        }
+        input[type=email], input[type=text], textarea {
+            border-top: 0;
+            border-right: 0;
+            border-left: 0;
+            font-size: 1rem;
+            border-bottom-width: 2px;
+            width: 100%;
+        }
+        input[type=email]:focus, input[type=text]:focus, textarea:focus {
+            border-bottom-color: #0d47a1;
+        }
+        .submit-button {
+            margin-left: -0.5rem;
+            padding: 0.5rem 0.75rem;
+            font-weight: 400;
+            cursor: pointer;
+            color: #002171;
+            font-size: 1rem;
+            border: 0;
+            background: none;
+        }
+        .submit-button:hover {
+            background: rgba(245, 245, 245, 0.5);
+        }
+        .submit-button:active {
+            background: rgba(245, 245, 245);
+        }
+        .form-error {
+            margin-top: 0.5rem;
+            color: #b00020;
+        }
+    </style>
+    <title>Lion</title>
+</head>
+<body style="width: 100%; height: 100%; padding: 0; margin: 0; display: flex; flex-direction: column; box-sizing: border-box">
+    <nav style="box-sizing: border-box; padding: 0; margin: 0; width: 100%; box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); position: fixed; top: 0; left: 0; background: white;">
+        <ul style="width: 100%; padding: 1.5rem 1rem; margin: 0; list-style-type: none; display: flex; flex-direction: row; align-items: flex-end; box-sizing: border-box">
+            <li><a class="nav-button active" id="link-home">HOME</a></li>
+            <li><a class="nav-button" id="link-about">ABOUT</a></li>
+            <li><a class="nav-button" id="link-contact">CONTACT US</a></li>
+            <li><a class="nav-button" id="link-github">GITHUB</a></li>
+            <li style="margin-left: auto"><a class="nav-button nav-button-end" id="link-login">OPEN APPLICATION</a></li>
+        </ul>
+    </nav>
+    <article style="margin-top: 4rem; height: calc(100% - 4rem); width: 100%; box-sizing: border-box;">
+        <section class="section" id="section-home" style="display: flex; flex-direction: column; justify-content: center; align-items: center; background-image: url('windmill.jpg'); background-size:cover; background-repeat:no-repeat;">
+            <h1 style="font-weight: 100; font-size: 6rem; margin: 1rem;">Listen Online</h1>
+            <small id="section-home-listen-text" style="margin-top: 1rem; color: #9e9e9e"></small>
+        </section>
+        <section class="section section-hidden" id="section-about">
+            <h1 class="title">About us</h1>
+            <div class="card">
+                <p> This system was developed by students of <a href="http://www.forwarddatalab.org/kevinchang"> Dr.  Kevin Chen-Chuan Chang</a> with the purpose of accessing data. Every day people make Terabytes of data through use of social media providers like Reddit, Youtube, and Twitter. Our goal is to lower the barrier of entry to accessing this data. The way that we accomplish this is a careful coordination between multiple technologies. Firstly, we build a <a href="https://graphql.org/"> GraphQL</a> server on top of the social media provider's API to represent the structure of the entities in their system. Next, users build queries using our visual, interactive query builder and these queries map to the GraphQL query language. These are sent to the GraphQL server which then takes the query and maps it to corresponding web requests. Eventually this returns data which is then stored and available for processing. </p>
+                <p> The real power of this system isn't the ability to make one-off queries, however. By working through the social media provider's API standards (Oauth1/2), we can take the authorizations that you provide and perform a query multiple times dependent on a schedule you set. This can be a simple as seeing what twitter hashtags are trending once a day to as interesting as looking for comments from a subreddit once a minute. </p>
+                <p> This is just the beginning of what we hope to provide. There are plenty of challenges moving forward, some of which are interesting research problems in themselves:
+                <ul>
+                    <li style="margin-bottom: 1rem"> Query scheduling in the context of rate limiting: At the end of the day, queries boil down to multiple web requests that are subject to rate limiting dependent on the social media provider. This question is, in essence, if somebody presents a query and we want to make sure they get as much data as possible, can we break their query down into its constituent pieces and schedule it as efficiently as possible?</li>
+                    <li style="margin-bottom: 1rem">Query optimization: Similar to the above, each query consumes a finite resource for the user (namely, the number of web requests they can perform within a certain period of time). Is it possible for us to take their query and minimize the nubmer of web requests that they perform? Can we apply heuristics based off of the data that is returned to find what an optimal time to perform the query would be?  </li>
+                    <li> Mining API documentation for a structural, graph representation: As stated above, to support a different social media provider we develop a GraphQL schhema on top of their api. Presently, this is a manual process and there's not necessarily a good reason for it to be. With most documentation of API by these providers, we have semi-structured text data that describe entities and their relationships. It would be nice if we could mine this structure and synthesize a schema definition from it. </li>
+                </ul>
+                <p> At the end of the day, we're really excited that you're interested in this system and hope that we can meet your expectations and help you get access to the data that you need. Thank you for your time and, if you are interested in the development of this system, feel free to check us out on Github where the source code for this project is kept open source and free. </p>
+            </div>
+        </section>
+        <section class="section section-hidden" id="section-contact">
+            <h1 class="title">
+                We're really happy that you're interested in our system! If you could provide the following bits of info, we will be in contact shortly.
+            </h1>
+            <div style="display: flex; justify-content: center; align-items: center; margin-top: 1rem">
+                <div class="card" style="display: inline-flex; margin-left: auto; margin-right: auto;">
+                    <form style="display: inline-table; box-sizing: border-box;" onsubmit="return false">
+                        <!--TODO: Add CSRF Token-->
+                        <!--                @csrf-->
+                        <div class="form-row">
+                            <label for="contact-submit-email">Email address</label>
+                            <small class="form-field-aux">How can we best get in contact with you? We'll never share your email with anyone else.</small>
+                            <input type="email" class="form-control" id="contact-submit-email" name="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                            <small class="form-error"></small>
+                        </div>
+                        <div class="form-row">
+                            <label for="contact-submit-name">Name</label>
+                            <small class="form-field-aux">However you (or your organization) would like to be addressed.</small>
+                            <input type="text" class="form-control" id="contact-submit-name" name="name" aria-describedby="nameHelp" placeholder="Enter your name" required>
+                            <small class="form-error"></small>
+                        </div>
+                        <div class="form-row">
+                            <label for="contact-submit-content">What specifically interests you in our system?</label>
+                            <small class="form-field-aux">This is optional, but it can help us iterate and improve in the future.</small>
+                            <textarea style="display: block" id="contact-submit-content" name="about" rows="1"></textarea>
+                        </div>
+                        <button type="button" id="contact-submit-button" class="submit-button">SUBMIT</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </article>
+
+    <script>
+        function noSubmission(e) {
+            e.preventDefault();
+            return false;
+        }
+    </script>
+    <script>
+        (function init () {
+            var redirectURL = '';
+            var serviceTitles = ['Reddit', 'Twitter', 'GitHub', 'YouTube'];
+
+
+            var $homeButton = document.getElementById('link-home');
+            var $aboutButton = document.getElementById('link-about');
+            var $contactButton = document.getElementById('link-contact');
+            var $githubButton = document.getElementById('link-github');
+            var $loginButton = document.getElementById('link-login');
+
+            var $sectionHome = document.getElementById('section-home');
+            var $sectionAbout = document.getElementById('section-about');
+            var $sectionContact = document.getElementById('section-contact');
+
+            var buttonActiveClassName = 'active';
+            var sectionHiddenClassName = 'section-hidden';
+
+            function activateButton($target) {
+                function removeClassName($e) {
+                    if ($e !== $target) {
+                        $e.className = $e.className.replace(buttonActiveClassName, '').trim();
+                    } else {
+                        if ($e.className.indexOf(buttonActiveClassName) < 0) {
+                            $e.className += ' ' + buttonActiveClassName;
+                        }
+                    }
+                }
+                removeClassName($homeButton);
+                removeClassName($aboutButton);
+                removeClassName($contactButton);
+                removeClassName($githubButton);
+            }
+
+            function showSection($target) {
+                function addClassName($e) {
+                    if ($e !== $target) {
+                        if ($e.className.indexOf(sectionHiddenClassName) < 0) {
+                            $e.className += ' ' + sectionHiddenClassName;
+                        }
+                    } else {
+                        if ($e.className.indexOf(sectionHiddenClassName) >= 0) {
+                            $e.className = $e.className.replace(sectionHiddenClassName, '').trim();
+                        }
+                    }
+                }
+                addClassName($sectionHome);
+                addClassName($sectionAbout);
+                addClassName($sectionContact);
+            }
+
+            (function initHome () {
+                var idx = 0;
+                var $sectionExplanation = document.getElementById('section-home-listen-text');
+                $sectionExplanation.innerHTML = 'Listen on ' + serviceTitles[idx];
+                setInterval(function () {
+                    idx = (idx + 1) % serviceTitles.length;
+                    $sectionExplanation.innerHTML = 'Listen on ' + serviceTitles[idx];
+                }, 1500);
+            })();
+
+            $homeButton.addEventListener('click', function () {
+                activateButton($homeButton);
+                showSection($sectionHome);
+            });
+
+            $aboutButton.addEventListener('click', function () {
+                activateButton($aboutButton);
+                showSection($sectionAbout);
+            });
+
+            $contactButton.addEventListener('click', function () {
+                activateButton($contactButton);
+                showSection($sectionContact);
+            });
+
+            $githubButton.addEventListener('click', function () {
+                window.open('https://github.com/wangleex/lion');
+            });
+
+            $loginButton.addEventListener('click', function () {
+                // todo: add redirect message
+                window.location.replace(redirectURL);
+            });
+
+
+            (function contactInit() {
+                var $contactSubmitButton = document.getElementById('contact-submit-button');
+                var $contactEmail = document.getElementById('contact-submit-email');
+                var $errorContactEmail = $contactEmail.nextElementSibling;
+                var $contactName = document.getElementById('contact-submit-name');
+                var $errorContactName = $contactName.nextElementSibling;
+                var $contactContent = document.getElementById('contact-submit-content');
+                var whiteSpace = /^\s*$/;
+                var email = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])/;
+                $contactSubmitButton.addEventListener('click', function () {
+                    var emailValue = $contactEmail.value;
+                    var nameValue = $contactName.value;
+                    var textValue = $contactContent.value;
+                    if (emailValue.match(whiteSpace)) {
+                        $errorContactEmail.textContent = 'Email cannot be empty';
+                    } else if (!emailValue.match(email)) {
+                        $errorContactEmail.textContent = 'Invalid email address';
+                    } else if (nameValue.match(whiteSpace)) {
+                        $errorContactName.textContent = 'Name cannot be empty';
+                    } else {
+                        // todo: polyfill es6 if necessary
+                        axios({
+                            method: 'post',
+                            url: '/contact',
+                            timeout: 1000 * 5,
+                            // todo: CSRF Header
+                            data: {
+                                'email': emailValue,
+                                'name': nameValue,
+                                'content': textValue
+                            }
+                        }).then(function (response) {
+                            var data = response.data;
+                            var status = response.status;
+                            // todo: handle normal response
+                            // todo: handle invalid response
+                            // todo: manipulate error message
+                        });
+                    }
+                })
+            })();
+        })();
+    </script>
+</body>
+</html>

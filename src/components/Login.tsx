@@ -1,61 +1,105 @@
-import React, {Component} from "react";
+import React, {useState} from "react";
 import Axios from "axios";
-import {Button, Paper, TextField} from "@material-ui/core";
+import {Button, Container, Paper, TextField} from "@material-ui/core";
 import {User} from "../models/user";
+import {makeStyles} from "@material-ui/core/styles";
 
 const whiteSpaceRegex = /^\s*$/;
 
+const loginStyles = makeStyles({
+    paper: {
+        padding: '2rem'
+    },
+    title: {
+        color: '#212121',
+        margin: '0 0 2rem 0'
+    },
+    form: {
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    fieldSeparation: {
+        marginBottom: '1rem'
+    },
+    functionalitySeparation: {
+        marginBottom: '2rem'
+    }
+});
+
 export interface LoginProps {
-    updateUserInfo(user: User): any;
+    updateUserInfo(user: User): void;
 }
 
-export class Login extends Component<LoginProps> {
-    state = {
-        username: '',
-        password: '',
-        usernameErrorText: '',
-        passwordErrorText: ''
+export function Login(props: LoginProps) {
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [usernameError, setUserNameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const styles = loginStyles();
+
+    const onUpdateUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserName(e.target.value);
     };
-    onUpdateUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({...this.state, username: e.target.value});
+    const onUpdateUserPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
     };
-    onUpdateUserPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({...this.state, password: e.target.value});
-    };
-    onSubmitForm = async () => {
-        if (this.state.username.match(whiteSpaceRegex)) {
-            this.setState({...this.state, usernameErrorText: 'Username cannot be empty'});
-        } else if (this.state.password.match(whiteSpaceRegex)) {
-            this.setState({...this.state, passwordErrorText: 'Password cannot be empty'});
+    const onSubmitForm = async () => {
+        if (username.match(whiteSpaceRegex)) {
+            setUserNameError('Username cannot be empty');
+        } else if (password.match(whiteSpaceRegex)) {
+            setPasswordError('Password cannot be empty');
         } else {
-            // todo: submit login credential
-            const response = await Axios({
-                url: '/login',
-                method: "POST",
-                timeout: 5000,
-                data: {
-                    name: this.state.username,
-                    password: this.state.password
-                }
-            });
-            const data = response.data;
-            const status = response.status;
-            // todo: handle post responses
-            this.props.updateUserInfo(new User('MockUser', true));
+            try {
+                // todo: submit login credential
+                const response = await Axios({
+                    url: '/login',
+                    method: "POST",
+                    timeout: 5000,
+                    data: {
+                        name: username,
+                        password: password
+                    }
+                });
+                const data = response.data;
+                const status = response.status;
+            } catch (e) {
+                // todo: handle post responses
+                console.error(e)
+            }
+            props.updateUserInfo(new User('MockUser', true));
         }
     };
-    render() {
-        return (
-            <div style={{padding: `5em`}}>
-                <Paper>
-                    <form noValidate>
-                        <h1>Login</h1>
-                        <TextField id="standard-basic" label={'username'} onChange={this.onUpdateUserName}/>
-                        <TextField  id="standard-basic" label={'password'} type={'password'} onChange={this.onUpdateUserPassword}/>
-                        <Button variant="contained" onClick={this.onSubmitForm}>SUBMIT</Button>
+
+    return (
+        <div style={{padding: `5em`}}>
+            <Container maxWidth={'sm'}>
+                <Paper className={styles.paper}>
+                    <h1 className={styles.title}>Login</h1>
+                    <form className={styles.form} noValidate>
+                        <TextField
+                            error={usernameError !== ''}
+                            color={'secondary'}
+                            className={styles.fieldSeparation}
+                            id="standard-basic"
+                            label={'username'}
+                            helperText={usernameError}
+                            onChange={onUpdateUserName}
+                        />
+                        <TextField
+                            error={passwordError !== ''}
+                            color={'secondary'}
+                            className={styles.functionalitySeparation}
+                            id="standard-basic"
+                            label={'password'}
+                            type={'password'}
+                            helperText={passwordError}
+                            onChange={onUpdateUserPassword}
+                        />
+                        <Button color={'secondary'} variant="contained" onClick={onSubmitForm}>SUBMIT</Button>
                     </form>
                 </Paper>
-            </div>
-        )
-    }
+            </Container>
+        </div>
+    )
 }

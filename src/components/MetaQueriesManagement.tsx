@@ -1,5 +1,12 @@
-import React from "react";
+import React, {useEffect} from "react";
+import {PageCommonProps} from "./CommonProps";
 
-export function MetaQueriesManagement() {
+interface MetaQueriesProps extends PageCommonProps {}
+
+export function MetaQueriesManagement(props: MetaQueriesProps) {
+    const {updateTitle} = props;
+    useEffect(() => {
+        updateTitle();
+    }, [updateTitle]);
     return (<div/>);
 }

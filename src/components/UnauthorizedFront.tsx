@@ -1,14 +1,10 @@
 import {AppBar, Toolbar, Typography} from "@material-ui/core";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {Login} from "./Login";
-import {User} from "../models/user";
 import React from "react";
 
-export interface unauthorizedFrontProps {
-    updateUser(user: User): void;
-}
 
-export function UnauthorizedFront(props: unauthorizedFrontProps) {
+export function UnauthorizedFront() {
     return (
         <Router>
             <div>
@@ -21,7 +17,7 @@ export function UnauthorizedFront(props: unauthorizedFrontProps) {
                 </AppBar>
                 <Switch>
                     <Route path={'/'}>
-                        <Login updateUserInfo={props.updateUser}/>
+                        <Login/>
                     </Route>
                 </Switch>
             </div>

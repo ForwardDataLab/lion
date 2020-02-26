@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import {fade, makeStyles} from "@material-ui/core/styles";
 import {Theme} from "@material-ui/core";
 
 const drawerWidth = 240;
@@ -39,12 +39,13 @@ export const appStyles = makeStyles((theme: Theme) => ({
     },
     content: {
         flexGrow: 1,
-        padding: theme.spacing(3),
+        padding: theme.spacing(4),
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
         marginLeft: -drawerWidth,
+        marginTop: '70px' // this is hardcoded to match the height of app bar
     },
     contentShift: {
         transition: theme.transitions.create('margin', {
@@ -70,5 +71,10 @@ export const appStyles = makeStyles((theme: Theme) => ({
         textDecoration: 'none',
         color: '#212121',
         fontSize: '0.75rem'
+    },
+    linkActiveStyle: {
+        '&> div': {
+            backgroundColor: fade(theme.palette.primary.main, 0.5) // hack the active button color in drawer
+        }
     }
 }));

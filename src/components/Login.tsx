@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import Axios from "axios";
 import {Button, Container, Paper, TextField} from "@material-ui/core";
-import {User} from "../models/user";
+import {User} from "../models/User";
 import {makeStyles} from "@material-ui/core/styles";
+import {globalStore, SET_USER} from "../store/globalState";
 
 const whiteSpaceRegex = /^\s*$/;
 
@@ -26,15 +27,12 @@ const loginStyles = makeStyles({
     }
 });
 
-export interface LoginProps {
-    updateUserInfo(user: User): void;
-}
-
-export function Login(props: LoginProps) {
+export function Login() {
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [usernameError, setUserNameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const {dispatch} = useContext(globalStore);
 
     const styles = loginStyles();
 
@@ -67,7 +65,7 @@ export function Login(props: LoginProps) {
                 // todo: handle post responses
                 console.error(e)
             }
-            props.updateUserInfo(new User('MockUser', true));
+            dispatch({type: SET_USER, payload: new User('MockUser', true)});
         }
     };
 

@@ -13,23 +13,19 @@ import {
     useTheme
 } from "@material-ui/core";
 import clsx from "clsx";
-import {Explore, LinearScale, Menu, People, Search, Share, Web} from "@material-ui/icons";
-import {BrowserRouter as Router, Link, Redirect, Route, Switch} from "react-router-dom";
-import {info} from "../data/RouterInformation";
+import {Explore, Help, LinearScale, Menu, People, Search, Share, Web} from "@material-ui/icons";
+import {BrowserRouter as Router, Link, NavLink, Redirect, Route, Switch} from "react-router-dom";
+import {info} from "../data/routerInformation";
 import {QueriesManagement} from "./QueriesManagement";
 import {SocialMediaManagement} from "./SocialMediaManagement";
 import {MetaQueriesManagement} from "./MetaQueriesManagement";
 import {ApplicationsManagement} from "./ApplicationsManagement";
-import React, {useState} from "react";
-import {User} from "../models/user";
+import React, {useCallback, useContext, useState} from "react";
 import {appStyles} from "../styles/app";
 import {RouteProps} from "react-router";
 import {ServerManagement} from "./ServerManagement";
 import {UserManagement} from "./UserManagement";
-
-export interface authorizedFrontProps {
-    user: User
-}
+import {globalStore} from "../store/globalState";
 
 interface ExtendedRouteProps extends RouteProps {
     isAuthenticated: boolean
@@ -56,11 +52,22 @@ function PrivateRoute({ isAuthenticated, children, ...rest }: ExtendedRouteProps
     );
 }
 
-export function AuthorizedFront(props: authorizedFrontProps) {
+export function AuthorizedFront() {
     const [title, setTitle] = useState(info.queries.name);
-    const [isOpen, toggleMenuOpen] = useState(false);
+    const [isOpen, toggleMenuOpen] = useState(true);
+    const {state} = useContext(globalStore);
     const styles = appStyles();
     const theme = useTheme();
+    const onActivePageQueries = useCallback(() => setTitle(info.queries.name), []);
+    const onActivePageSocialMedia = useCallback(() => setTitle(info.socialMedia.name), []);
+    const onActivePageMetaQueries = useCallback(() => setTitle(info.metaQueries.name), []);
+    const onActivePageApplications = useCallback(() => setTitle(info.applications.name), []);
+    const onActivePageServers = useCallback(() => setTitle(info.servers.name), []);
+    const onActivePageUsers = useCallback(() => setTitle(info.users.name), []);
+    const user = state.user;
+    if (user == null) {
+        throw new Error('user cannot be null');
+    }
     return (
         <Router>
             <div className={styles.root}>
@@ -90,78 +97,88 @@ export function AuthorizedFront(props: authorizedFrontProps) {
                     >
                         <ButtonBase>
                             <div className={styles.nameCard}>
-                                <h2 className={styles.nameCardHeader}>Hello, <span style={{color: theme.palette.secondary.main}}>{props.user.userName}</span></h2>
+                                <h2 className={styles.nameCardHeader}>Hello,</h2>
+                                <h2 className={styles.nameCardHeader} style={{color: theme.palette.secondary.main}}>{user.userName}</h2>
                             </div>
                         </ButtonBase>
                         <Divider />
                         <List>
-                            <Link to={info.queries.url} key={info.queries.name} className={styles.linkNoStyle}>
-                                <ListItem button onClick={() => setTitle(info.queries.name)}>
+                            <NavLink to={info.queries.url} key={info.queries.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                <ListItem button>
                                     <ListItemIcon><Search/></ListItemIcon>
                                     <ListItemText primary={info.queries.name}/>
                                 </ListItem>
-                            </Link>
-                            <Link to={info.socialMedia.url} key={info.socialMedia.name} className={styles.linkNoStyle}>
-                                <ListItem button onClick={() => setTitle(info.socialMedia.name)}>
+                            </NavLink>
+                            <NavLink to={info.socialMedia.url} key={info.socialMedia.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                <ListItem button>
                                     <ListItemIcon><Share/></ListItemIcon>
                                     <ListItemText primary={info.socialMedia.name}/>
                                 </ListItem>
-                            </Link>
-                            <Link to={info.metaQueries.url} key={info.metaQueries.name} className={styles.linkNoStyle}>
-                                <ListItem button onClick={() => setTitle(info.metaQueries.name)}>
+                            </NavLink>
+                            <NavLink to={info.metaQueries.url} key={info.metaQueries.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                <ListItem button>
                                     <ListItemIcon><LinearScale/></ListItemIcon>
                                     <ListItemText primary={info.metaQueries.name}/>
                                 </ListItem>
-                            </Link>
-                            <Link to={info.applications.url} key={info.applications.name} className={styles.linkNoStyle}>
-                                <ListItem button onClick={() => setTitle(info.applications.name)}>
+                            </NavLink>
+                            <NavLink to={info.applications.url} key={info.applications.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                <ListItem button>
                                     <ListItemIcon><Explore/></ListItemIcon>
                                     <ListItemText primary={info.applications.name}/>
                                 </ListItem>
-                            </Link>
+                            </NavLink>
                         </List>
                         <Divider/>
-                        {props.user.isAdmin && (
+                        {user.isAdmin && (
                             <List>
-                                <Link to={info.servers.url} key={info.servers.name} className={styles.linkNoStyle}>
-                                    <ListItem button onClick={() => setTitle(info.servers.name)}>
+                                <NavLink to={info.servers.url} key={info.servers.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                    <ListItem button>
                                         <ListItemIcon><Web/></ListItemIcon>
                                         <ListItemText primary={info.servers.name}/>
                                     </ListItem>
-                                </Link>
-                                <Link to={info.users.url} key={info.users.name} className={styles.linkNoStyle}>
-                                    <ListItem button onClick={() => setTitle(info.users.name)}>
+                                </NavLink>
+                                <NavLink to={info.users.url} key={info.users.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                    <ListItem button>
                                         <ListItemIcon><People/></ListItemIcon>
                                         <ListItemText primary={info.users.name}/>
                                     </ListItem>
-                                </Link>
+                                </NavLink>
                             </List>
                         )}
+                        <Divider />
+                        <List>
+                            <NavLink to={info.help.url} key={info.help.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                <ListItem button>
+                                    <ListItemIcon><Help/></ListItemIcon>
+                                    <ListItemText primary={info.help.name}/>
+                                </ListItem>
+                            </NavLink>
+                        </List>
                     </Drawer>
                 </nav>
 
                 <div className={clsx(styles.content, {[styles.contentShift]: isOpen})}>
                     <Switch>
                         <Route path={info.queries.url}>
-                            <QueriesManagement/>
+                            <QueriesManagement updateTitle={onActivePageQueries}/>
                         </Route>
                         <Route path={info.socialMedia.url}>
-                            <SocialMediaManagement/>
+                            <SocialMediaManagement updateTitle={onActivePageSocialMedia}/>
                         </Route>
                         <Route path={info.metaQueries.url}>
-                            <MetaQueriesManagement/>
+                            <MetaQueriesManagement updateTitle={onActivePageMetaQueries}/>
                         </Route>
                         <Route path={info.applications.url}>
-                            <ApplicationsManagement/>
+                            <ApplicationsManagement updateTitle={onActivePageApplications}/>
                         </Route>
-                        <PrivateRoute isAuthenticated={props.user.isAdmin} path={info.servers.url}>
-                            <ServerManagement/>
+                        <PrivateRoute isAuthenticated={user.isAdmin} path={info.servers.url}>
+                            <ServerManagement updateTitle={onActivePageServers}/>
                         </PrivateRoute>
-                        <PrivateRoute isAuthenticated={props.user.isAdmin} path={info.users.url}>
-                            <UserManagement/>
+                        <PrivateRoute isAuthenticated={user.isAdmin} path={info.users.url}>
+                            <UserManagement updateTitle={onActivePageUsers}/>
                         </PrivateRoute>
                         <Route path={'/'}>
-                            <QueriesManagement/>
+                            <QueriesManagement updateTitle={onActivePageQueries}/>
                         </Route>
                     </Switch>
                 </div>

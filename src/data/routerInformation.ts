@@ -22,5 +22,9 @@ export const info = {
     users: {
         url: `/ad-users`,
         name: `Users`
+    },
+    help: {
+        url: `/help`,
+        name: `Help`
     }
 };

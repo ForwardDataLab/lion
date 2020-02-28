@@ -8,5 +8,7 @@ export function UserManagement(props: UserProps) {
     useEffect(() => {
         updateTitle();
     }, [updateTitle]);
+    // quota, certain amount of API calls
+    // delete users
     return (<div/>);
 }

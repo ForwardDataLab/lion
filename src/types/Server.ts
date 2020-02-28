@@ -7,7 +7,7 @@ export interface Server {
     requireAuthorization: boolean
 }
 
-export const enum ServerUpdateType {
+export enum ServerUpdateType {
     ADD, DELETE, UPDATE
 }
 

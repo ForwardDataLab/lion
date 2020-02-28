@@ -6,6 +6,8 @@ import {Query} from "../../types/Query";
 
 interface QueriesProps extends ViewCommonProps {}
 
+// todo: spreadsheet like; nested lists
+
 export function QueriesManagement(props: QueriesProps) {
     const {updateTitle} = props;
     // const {state} = useContext(globalStore);

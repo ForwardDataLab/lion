@@ -8,7 +8,7 @@ import {Redirect, useParams} from "react-router-dom";
 import {Snackbar, Slide, Button} from "@material-ui/core";
 import {TransitionProps} from "@material-ui/core/transitions";
 
-export const enum ServerRouteType {
+export enum ServerRouteType {
     LIST, NEW, DETAIL
 }
 

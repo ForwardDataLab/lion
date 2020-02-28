@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState, Fragment, useCallback} from "react";
-import {globalStore} from "../store/globalState";
-import {SocialMediaSource} from "../models/SocialMediaSource";
-import {socialMediaStyles} from "../styles/socialMedia";
+import {globalStore} from "../../store/globalState";
+import {SocialMediaSource} from "../../models/SocialMediaSource";
+import {socialMediaStyles} from "../../styles/socialMedia";
 import {Button, Divider, List, ListItem, ListItemText, Paper} from "@material-ui/core";
-import {info} from "../data/routerInformation";
-import {PageCommonProps} from "./CommonProps";
+import {info} from "../../data/routerEndpoints";
+import {ViewCommonProps} from "../../types/ViewProps";
 
-interface SocialMediaProps extends PageCommonProps{}
+interface SocialMediaProps extends ViewCommonProps{}
 
 const tempData: SocialMediaSource[] = [
     {
@@ -60,7 +60,7 @@ export function SocialMediaManagement(props: SocialMediaProps) {
     }, [mediaSources]);
     const styles = socialMediaStyles();
     return (
-        <Paper className={styles.wrapperStyle}>
+        <div>
             <h1 className={styles.titleStyle}>Available Sources</h1>
             <small className={styles.helperTextStyle}>If available, click on "Authorize" will redirect to authorization pages of corresponding social media platforms.</small>
             <List className={styles.root}>
@@ -80,6 +80,6 @@ export function SocialMediaManagement(props: SocialMediaProps) {
                     })
                 }
             </List>
-        </Paper>
+        </div>
     );
 }

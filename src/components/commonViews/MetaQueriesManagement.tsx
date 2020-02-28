@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
-import {PageCommonProps} from "./CommonProps";
+import {ViewCommonProps} from "../../types/ViewProps";
 
-interface MetaQueriesProps extends PageCommonProps {}
+interface MetaQueriesProps extends ViewCommonProps {}
 
 export function MetaQueriesManagement(props: MetaQueriesProps) {
     const {updateTitle} = props;

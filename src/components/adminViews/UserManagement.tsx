@@ -1,8 +1,9 @@
 import React, {useEffect} from "react";
-import {PageCommonProps} from "./CommonProps";
+import {ViewCommonProps} from "../../types/ViewProps";
 
-interface QueriesProps extends PageCommonProps {}
-export function QueriesManagement(props: QueriesProps) {
+interface UserProps extends ViewCommonProps{}
+
+export function UserManagement(props: UserProps) {
     const {updateTitle} = props;
     useEffect(() => {
         updateTitle();

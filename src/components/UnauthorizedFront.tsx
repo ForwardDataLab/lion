@@ -2,6 +2,7 @@ import {AppBar, Toolbar, Typography} from "@material-ui/core";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {Login} from "./Login";
 import React from "react";
+import {NotFoundPage} from "./commonViews/NotFoundPage";
 
 
 export function UnauthorizedFront() {
@@ -19,6 +20,7 @@ export function UnauthorizedFront() {
                     <Route path={'/'}>
                         <Login/>
                     </Route>
+                    <Route><NotFoundPage/></Route>
                 </Switch>
             </div>
         </Router>

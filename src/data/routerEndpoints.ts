@@ -1,4 +1,4 @@
-export const info = {
+export const routerEndpoints = {
     socialMedia: {
         url: `/soc`,
         name: `Social Media`
@@ -17,6 +17,14 @@ export const info = {
     },
     servers: {
         url: `/ad-servers`,
+        create: {
+            url: `/ad-servers/create-new-server`
+        },
+        detail: {
+            paramName: `name`,
+            urlBase: `/ad-servers/view/`,
+            urlDynamic: `/ad-servers/view/:name`
+        },
         name: `Servers`
     },
     users: {
@@ -26,5 +34,8 @@ export const info = {
     help: {
         url: `/help`,
         name: `Help`
+    },
+    invalid: {
+        url: `/404`
     }
 };

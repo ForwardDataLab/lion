@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
-import {PageCommonProps} from "./CommonProps";
+import {ViewCommonProps} from "../../types/ViewProps";
 
-interface ApplicationsProps extends PageCommonProps{}
+interface ApplicationsProps extends ViewCommonProps{}
 
 export function ApplicationsManagement(props: ApplicationsProps) {
     const {updateTitle} = props;

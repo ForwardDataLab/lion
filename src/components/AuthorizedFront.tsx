@@ -23,7 +23,7 @@ import {ApplicationsManagement} from "./commonViews/ApplicationsManagement";
 import React, {useCallback, useContext, useState} from "react";
 import {appStyles} from "../styles/app";
 import {RouteProps} from "react-router";
-import {ServerManagement, ServerRouteType} from "./adminViews/ServerManagement";
+import {ServerManagement, ServerRouteType} from "./adminViews/servers/ServerManagement";
 import {UserManagement} from "./adminViews/UserManagement";
 import {globalStore} from "../store/globalState";
 import {NotFoundPage} from "./commonViews/NotFoundPage";
@@ -33,18 +33,18 @@ interface ExtendedRouteProps extends RouteProps {
 }
 
 
-function PrivateRoute({ isAuthenticated, children, ...rest }: ExtendedRouteProps) {
+function PrivateRoute({isAuthenticated, children, ...rest}: ExtendedRouteProps) {
     return (
         <Route
             {...rest}
-            render={({ location }) =>
+            render={({location}) =>
                 isAuthenticated ? (
                     children
                 ) : (
                     <Redirect
                         to={{
                             pathname: "/",
-                            state: { from: location }
+                            state: {from: location}
                         }}
                     />
                 )
@@ -99,30 +99,35 @@ export function AuthorizedFront() {
                         <ButtonBase>
                             <div className={styles.nameCard}>
                                 <h2 className={styles.nameCardHeader}>Hello,</h2>
-                                <h2 className={styles.nameCardHeader} style={{color: theme.palette.secondary.main}}>{user.userName}</h2>
+                                <h2 className={styles.nameCardHeader}
+                                    style={{color: theme.palette.secondary.main}}>{user.userName}</h2>
                             </div>
                         </ButtonBase>
-                        <Divider />
+                        <Divider/>
                         <List>
-                            <NavLink to={routerEndpoints.queries.url} key={routerEndpoints.queries.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                            <NavLink to={routerEndpoints.queries.url} key={routerEndpoints.queries.name}
+                                     className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                 <ListItem button>
                                     <ListItemIcon><Search/></ListItemIcon>
                                     <ListItemText primary={routerEndpoints.queries.name}/>
                                 </ListItem>
                             </NavLink>
-                            <NavLink to={routerEndpoints.socialMedia.url} key={routerEndpoints.socialMedia.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                            <NavLink to={routerEndpoints.socialMedia.url} key={routerEndpoints.socialMedia.name}
+                                     className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                 <ListItem button>
                                     <ListItemIcon><Share/></ListItemIcon>
                                     <ListItemText primary={routerEndpoints.socialMedia.name}/>
                                 </ListItem>
                             </NavLink>
-                            <NavLink to={routerEndpoints.metaQueries.url} key={routerEndpoints.metaQueries.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                            <NavLink to={routerEndpoints.metaQueries.url} key={routerEndpoints.metaQueries.name}
+                                     className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                 <ListItem button>
                                     <ListItemIcon><LinearScale/></ListItemIcon>
                                     <ListItemText primary={routerEndpoints.metaQueries.name}/>
                                 </ListItem>
                             </NavLink>
-                            <NavLink to={routerEndpoints.applications.url} key={routerEndpoints.applications.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                            <NavLink to={routerEndpoints.applications.url} key={routerEndpoints.applications.name}
+                                     className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                 <ListItem button>
                                     <ListItemIcon><Explore/></ListItemIcon>
                                     <ListItemText primary={routerEndpoints.applications.name}/>
@@ -132,13 +137,15 @@ export function AuthorizedFront() {
                         <Divider/>
                         {user.isAdmin && (
                             <List>
-                                <NavLink to={routerEndpoints.servers.url} key={routerEndpoints.servers.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                <NavLink to={routerEndpoints.servers.url} key={routerEndpoints.servers.name}
+                                         className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                     <ListItem button>
                                         <ListItemIcon><Web/></ListItemIcon>
                                         <ListItemText primary={routerEndpoints.servers.name}/>
                                     </ListItem>
                                 </NavLink>
-                                <NavLink to={routerEndpoints.users.url} key={routerEndpoints.users.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                <NavLink to={routerEndpoints.users.url} key={routerEndpoints.users.name}
+                                         className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                     <ListItem button>
                                         <ListItemIcon><People/></ListItemIcon>
                                         <ListItemText primary={routerEndpoints.users.name}/>
@@ -146,9 +153,10 @@ export function AuthorizedFront() {
                                 </NavLink>
                             </List>
                         )}
-                        <Divider />
+                        <Divider/>
                         <List>
-                            <NavLink to={routerEndpoints.help.url} key={routerEndpoints.help.name} className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                            <NavLink to={routerEndpoints.help.url} key={routerEndpoints.help.name}
+                                     className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                 <ListItem button>
                                     <ListItemIcon><Help/></ListItemIcon>
                                     <ListItemText primary={routerEndpoints.help.name}/>

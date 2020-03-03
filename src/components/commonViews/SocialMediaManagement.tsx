@@ -1,12 +1,12 @@
-import React, {useContext, useEffect, useState, Fragment, useCallback} from "react";
+import React, {Fragment, useCallback, useContext, useEffect, useState} from "react";
 import {globalStore} from "../../store/globalState";
 import {SocialMediaSource} from "../../models/SocialMediaSource";
 import {socialMediaStyles} from "../../styles/socialMedia";
-import {Button, Divider, List, ListItem, ListItemText, Paper} from "@material-ui/core";
-import {routerEndpoints} from "../../data/routerEndpoints";
+import {Button, List, ListItem, ListItemText} from "@material-ui/core";
 import {ViewCommonProps} from "../../types/ViewProps";
 
-interface SocialMediaProps extends ViewCommonProps{}
+interface SocialMediaProps extends ViewCommonProps {
+}
 
 const tempData: SocialMediaSource[] = [
     {
@@ -44,8 +44,8 @@ export function SocialMediaManagement(props: SocialMediaProps) {
     }, [updateTitle]);
     useEffect(() => {
         (async () => {
-           // todo: fetch user data here
-           setMediaSources(tempData);
+            // todo: fetch user data here
+            setMediaSources(tempData);
         })();
     }, []);
     const onAuthMediaSource = useCallback(async (name: string) => {
@@ -62,16 +62,19 @@ export function SocialMediaManagement(props: SocialMediaProps) {
     return (
         <div>
             <h1 className={styles.titleStyle}>Available Sources</h1>
-            <small className={styles.helperTextStyle}>If available, click on "Authorize" will redirect to authorization pages of corresponding social media platforms.</small>
+            <small className={styles.helperTextStyle}>If available, click on "Authorize" will redirect to authorization
+                pages of corresponding social media platforms.</small>
             <List className={styles.root}>
                 {
                     mediaSources.map((source) => {
-                        const notAuth = <Button color="secondary" onClick={() => onAuthMediaSource(source.name)}>Authorize</Button>;
+                        const notAuth = <Button color="secondary"
+                                                onClick={() => onAuthMediaSource(source.name)}>Authorize</Button>;
                         const auth = <ListItemText className={styles.authorizedTextStyle} primary={'Authorized'}/>;
                         return (
                             <Fragment>
                                 <ListItem className={styles.listItemStyle} key={source.name} divider>
-                                    <img className={styles.imageStyle} src={source.imageURL} alt={source.name} width={'48px'}/>
+                                    <img className={styles.imageStyle} src={source.imageURL} alt={source.name}
+                                         width={'48px'}/>
                                     <ListItemText primary={source.name}/>
                                     {source.isAuthenticated ? auth : notAuth}
                                 </ListItem>

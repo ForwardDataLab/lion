@@ -1,18 +1,18 @@
-import React, {ReactNode, useCallback, useEffect, useState} from "react";
-import {ViewCommonProps} from "../../types/ViewProps";
-import {Server, ServerUpdateRequest, ServerUpdateResult, ServerUpdateType} from "../../types/Server";
+import React, {ReactNode, useEffect, useState} from "react";
+import {ViewCommonProps} from "../../../types/ViewProps";
+import {Server, ServerUpdateRequest, ServerUpdateResult, ServerUpdateType} from "../../../types/Server";
 import {ServerList} from "./ServerList";
 import {ServerEdit} from "./ServerEdit";
-import {routerEndpoints} from "../../data/routerEndpoints";
+import {routerEndpoints} from "../../../data/routerEndpoints";
 import {Redirect, useParams} from "react-router-dom";
-import {Snackbar, Slide, Button} from "@material-ui/core";
+import {Button, Slide, Snackbar} from "@material-ui/core";
 import {TransitionProps} from "@material-ui/core/transitions";
 
 export enum ServerRouteType {
     LIST, NEW, DETAIL
 }
 
-interface ServerProps extends ViewCommonProps{
+interface ServerProps extends ViewCommonProps {
     routeType: ServerRouteType
 }
 
@@ -40,7 +40,7 @@ const fakeServers: Server[] = [
 ];
 
 function SnackBarTransition(props: TransitionProps) {
-    return <Slide {...props} direction="up" />;
+    return <Slide {...props} direction="up"/>;
 }
 
 const SnackBarButton = (
@@ -59,7 +59,7 @@ export function ServerManagement(props: ServerProps) {
         // todo: make http requests
         setServers(fakeServers);
     }, [setServers]);
-    const onUpdateServers = useCallback(async (request: ServerUpdateRequest) => {
+    const onUpdateServers = async (request: ServerUpdateRequest) => {
         // todo: make http requests
         const result: ServerUpdateResult = {
             isSuccess: true,
@@ -97,23 +97,15 @@ export function ServerManagement(props: ServerProps) {
         } else {
             setAlertMessage('Error: ' + result.errorMessage ?? 'Fail to modify servers');
         }
-    }, [servers, setServers, setAlertMessage]);
-    const onPerformUpdate = useCallback(
-        (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.UPDATE}),
-        [onUpdateServers]
-    );
-    const onPerformDelete = useCallback(
-        (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.DELETE}),
-        [onUpdateServers]
-    );
-    const onPerformAdd = useCallback(
-        (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.ADD}),
-        [onUpdateServers]
-    );
+    };
+    const onPerformUpdate = (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.UPDATE});
+    const onPerformDelete = (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.DELETE});
+    const onPerformAdd = (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.ADD});
+
     let child: ReactNode;
     switch (props.routeType) {
         case ServerRouteType.LIST: {
-            child = <ServerList servers={servers} onDelete={onPerformDelete}/>;
+            child = <ServerList servers={servers}/>;
             break;
         }
         case ServerRouteType.DETAIL: {
@@ -121,7 +113,7 @@ export function ServerManagement(props: ServerProps) {
             if (i < 0) {
                 child = <Redirect to={routerEndpoints.invalid.url}/>
             } else {
-                child = <ServerEdit onSave={onPerformUpdate} server={servers[i]}/>;
+                child = <ServerEdit onSave={onPerformUpdate} server={servers[i]} onDelete={onPerformDelete}/>;
             }
             break;
         }
@@ -134,7 +126,7 @@ export function ServerManagement(props: ServerProps) {
                 slug: "",
                 url: ""
             };
-            child = <ServerEdit onSave={onPerformAdd} server={server}/>;
+            child = <ServerEdit onSave={onPerformAdd}/>;
             break;
         }
         default:

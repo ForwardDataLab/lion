@@ -1,10 +1,10 @@
 export interface Server {
-    name: string, // assume that name is unique
-    url: string,
-    slug: string, // todo: change this into enum
-    description: string,
-    requireAuthentication: boolean,
-    requireAuthorization: boolean
+    readonly name: string, // assume that name is unique
+    readonly url: string,
+    readonly slug: string, // todo: change this into enum
+    readonly description: string,
+    readonly requireAuthentication: boolean,
+    readonly requireAuthorization: boolean
 }
 
 export enum ServerUpdateType {
@@ -12,11 +12,11 @@ export enum ServerUpdateType {
 }
 
 export interface ServerUpdateRequest {
-    data: Server,
-    type: ServerUpdateType
+    readonly data: Server,
+    readonly type: ServerUpdateType
 }
 
 export interface ServerUpdateResult {
-    isSuccess: boolean,
-    errorMessage: string | null
+    readonly isSuccess: boolean,
+    readonly errorMessage: string | null
 }

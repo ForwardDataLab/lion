@@ -18,6 +18,7 @@ export interface QueryRecord {
     runtime: number,
     data: QueryData
 }
+
 export interface Query {
     name: string,
     source: string,

@@ -62,7 +62,7 @@ export const appStyles = makeStyles((theme: Theme) => ({
     nameCard: {
         width: '100%',
         marginTop: '64px', // this is hardcoded to match the height of app bar
-        padding: theme.spacing(0, 0, 2,2),
+        padding: theme.spacing(0, 0, 2, 2),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start'
@@ -74,7 +74,7 @@ export const appStyles = makeStyles((theme: Theme) => ({
     },
     linkActiveStyle: {
         '&> div': {
-            backgroundColor: fade(theme.palette.primary.main, 0.5) // hack the active button color in drawer
+            backgroundColor: fade(theme.palette.primary.light, 0.12) // hack the active button color in drawer
         }
     }
 }));

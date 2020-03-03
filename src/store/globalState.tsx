@@ -16,10 +16,13 @@ interface ContextProps {
 }
 
 export const SET_USER = 'SET_USER';
-export const globalStore = createContext<ContextProps>({state: {user: null}, dispatch: () => {}});
+export const globalStore = createContext<ContextProps>({
+    state: {user: null}, dispatch: () => {
+    }
+});
 const {Provider} = globalStore;
 const reducer = (state: State, action: Action) => {
-    switch(action.type) {
+    switch (action.type) {
         case SET_USER:
             return {
                 ...state,
@@ -33,8 +36,8 @@ const reducer = (state: State, action: Action) => {
 const initialState: State = {
     user: null
 };
-export const GlobalStateProvider = ({children} : {children: ReactNode}) => {
+export const GlobalStateProvider = ({children}: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    return (<Provider value={{ state, dispatch }}>{children}</Provider>);
+    return (<Provider value={{state, dispatch}}>{children}</Provider>);
 };

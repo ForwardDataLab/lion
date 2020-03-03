@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {ViewCommonProps} from "../../types/ViewProps";
-import {globalStore} from "../../store/globalState";
-import {Query} from "../../types/Query";
 
 
-interface QueriesProps extends ViewCommonProps {}
+interface QueriesProps extends ViewCommonProps {
+}
 
 // todo: spreadsheet like; nested lists
 

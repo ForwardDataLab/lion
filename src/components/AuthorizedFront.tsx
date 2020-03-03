@@ -13,12 +13,11 @@ import {
     useTheme
 } from "@material-ui/core";
 import clsx from "clsx";
-import {Explore, Help, LinearScale, Menu, People, Search, Share, Web} from "@material-ui/icons";
+import {Explore, Help, Menu, People, Search, Share, Web} from "@material-ui/icons";
 import {BrowserRouter as Router, NavLink, Redirect, Route, Switch} from "react-router-dom";
 import {routerEndpoints} from "../data/routerEndpoints";
 import {QueriesManagement} from "./commonViews/QueriesManagement";
 import {SocialMediaManagement} from "./commonViews/SocialMediaManagement";
-import {MetaQueriesManagement} from "./commonViews/MetaQueriesManagement";
 import {ApplicationsManagement} from "./commonViews/ApplicationsManagement";
 import React, {useCallback, useContext, useState} from "react";
 import {appStyles} from "../styles/app";
@@ -119,13 +118,6 @@ export function AuthorizedFront() {
                                     <ListItemText primary={routerEndpoints.socialMedia.name}/>
                                 </ListItem>
                             </NavLink>
-                            {/*<NavLink to={routerEndpoints.metaQueries.url} key={routerEndpoints.metaQueries.name}*/}
-                            {/*         className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>*/}
-                            {/*    <ListItem button>*/}
-                            {/*        <ListItemIcon><LinearScale/></ListItemIcon>*/}
-                            {/*        <ListItemText primary={routerEndpoints.metaQueries.name}/>*/}
-                            {/*    </ListItem>*/}
-                            {/*</NavLink>*/}
                             <NavLink to={routerEndpoints.applications.url} key={routerEndpoints.applications.name}
                                      className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                 <ListItem button>
@@ -174,9 +166,6 @@ export function AuthorizedFront() {
                         <Route path={routerEndpoints.socialMedia.url}>
                             <SocialMediaManagement updateTitle={onActivePageSocialMedia}/>
                         </Route>
-                        {/*<Route path={routerEndpoints.metaQueries.url}>*/}
-                        {/*    <MetaQueriesManagement updateTitle={onActivePageMetaQueries}/>*/}
-                        {/*</Route>*/}
                         <Route path={routerEndpoints.applications.url}>
                             <ApplicationsManagement updateTitle={onActivePageApplications}/>
                         </Route>

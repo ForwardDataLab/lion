@@ -84,7 +84,8 @@ function ServerListDetailPanel(props: ServerListDetailPanelProps) {
                     <div className={styles.detailPanelItemTitle}>Description</div>
                 </Grid>
                 <Grid item xs={12}>
-                    <div className={clsx(styles.detailPanelItemContent, styles.indentedGridItem)}>{props.server.description}</div>
+                    <div
+                        className={clsx(styles.detailPanelItemContent, styles.indentedGridItem)}>{props.server.description}</div>
                 </Grid>
             </Grid>
         </div>
@@ -121,11 +122,11 @@ export function ServerList(props: ServerListProps) {
                     Container: (props) => <div {...props}/>
                 }}
                 icons={{
-                    FirstPage: forwardRef((props, ref) => <FirstPageOutlinedIcon {...props} ref={ref} />),
-                    LastPage: forwardRef((props, ref) => <LastPageOutlinedIcon {...props} ref={ref} />),
-                    NextPage: forwardRef((props, ref) => <KeyboardArrowRightOutlinedIcon {...props} ref={ref} />),
-                    PreviousPage: forwardRef((props, ref) => <KeyboardArrowLeftOutlinedIcon {...props} ref={ref} />),
-                    SortArrow: forwardRef((props, ref) => <ArrowUpwardOutlinedIcon {...props} ref={ref} />),
+                    FirstPage: forwardRef((props, ref) => <FirstPageOutlinedIcon {...props} ref={ref}/>),
+                    LastPage: forwardRef((props, ref) => <LastPageOutlinedIcon {...props} ref={ref}/>),
+                    NextPage: forwardRef((props, ref) => <KeyboardArrowRightOutlinedIcon {...props} ref={ref}/>),
+                    PreviousPage: forwardRef((props, ref) => <KeyboardArrowLeftOutlinedIcon {...props} ref={ref}/>),
+                    SortArrow: forwardRef((props, ref) => <ArrowUpwardOutlinedIcon {...props} ref={ref}/>),
                 }}
                 detailPanel={[
                     {

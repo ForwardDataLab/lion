@@ -1,6 +1,6 @@
 export const AppTheme = {
     palette: {
-        primary: {main: '#607D8B'},
+        primary: {main: '#455A64'},
         secondary: {main: '#f50057'}
     },
     typography: {

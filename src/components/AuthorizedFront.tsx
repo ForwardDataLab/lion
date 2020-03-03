@@ -119,13 +119,13 @@ export function AuthorizedFront() {
                                     <ListItemText primary={routerEndpoints.socialMedia.name}/>
                                 </ListItem>
                             </NavLink>
-                            <NavLink to={routerEndpoints.metaQueries.url} key={routerEndpoints.metaQueries.name}
-                                     className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
-                                <ListItem button>
-                                    <ListItemIcon><LinearScale/></ListItemIcon>
-                                    <ListItemText primary={routerEndpoints.metaQueries.name}/>
-                                </ListItem>
-                            </NavLink>
+                            {/*<NavLink to={routerEndpoints.metaQueries.url} key={routerEndpoints.metaQueries.name}*/}
+                            {/*         className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>*/}
+                            {/*    <ListItem button>*/}
+                            {/*        <ListItemIcon><LinearScale/></ListItemIcon>*/}
+                            {/*        <ListItemText primary={routerEndpoints.metaQueries.name}/>*/}
+                            {/*    </ListItem>*/}
+                            {/*</NavLink>*/}
                             <NavLink to={routerEndpoints.applications.url} key={routerEndpoints.applications.name}
                                      className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
                                 <ListItem button>
@@ -174,9 +174,9 @@ export function AuthorizedFront() {
                         <Route path={routerEndpoints.socialMedia.url}>
                             <SocialMediaManagement updateTitle={onActivePageSocialMedia}/>
                         </Route>
-                        <Route path={routerEndpoints.metaQueries.url}>
-                            <MetaQueriesManagement updateTitle={onActivePageMetaQueries}/>
-                        </Route>
+                        {/*<Route path={routerEndpoints.metaQueries.url}>*/}
+                        {/*    <MetaQueriesManagement updateTitle={onActivePageMetaQueries}/>*/}
+                        {/*</Route>*/}
                         <Route path={routerEndpoints.applications.url}>
                             <ApplicationsManagement updateTitle={onActivePageApplications}/>
                         </Route>

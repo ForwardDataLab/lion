@@ -71,8 +71,8 @@ export function SocialMediaManagement(props: SocialMediaProps) {
                                                 onClick={() => onAuthMediaSource(source.name)}>Authorize</Button>;
                         const auth = <ListItemText className={styles.authorizedTextStyle} primary={'Authorized'}/>;
                         return (
-                            <Fragment>
-                                <ListItem className={styles.listItemStyle} key={source.name} divider>
+                            <Fragment key={source.name}>
+                                <ListItem className={styles.listItemStyle} divider>
                                     <img className={styles.imageStyle} src={source.imageURL} alt={source.name}
                                          width={'48px'}/>
                                     <ListItemText primary={source.name}/>

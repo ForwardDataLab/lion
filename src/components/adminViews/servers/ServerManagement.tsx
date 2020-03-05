@@ -1,24 +1,19 @@
 import React, {ReactNode, useEffect, useState} from "react";
-import {ViewCommonProps} from "../../../types/ViewProps";
-import {Server, ServerUpdateRequest, ServerUpdateResult, ServerUpdateType} from "../../../types/Server";
+import {
+    ServerProps,
+    ServerRouteParams,
+    ServerRouteType,
+    ServerUpdateRequest,
+    ServerUpdateResult,
+    ServerUpdateType
+} from "../../../types/ServerProps";
 import {ServerList} from "./ServerList";
 import {ServerEdit} from "./ServerEdit";
-import {routerEndpoints} from "../../../data/routerEndpoints";
-import {Redirect, useParams} from "react-router-dom";
-import {Button, Slide, Snackbar} from "@material-ui/core";
-import {TransitionProps} from "@material-ui/core/transitions";
-
-export enum ServerRouteType {
-    LIST, NEW, DETAIL
-}
-
-interface ServerProps extends ViewCommonProps {
-    routeType: ServerRouteType
-}
-
-interface ServerRouteParams {
-    [index: string]: string
-}
+import {routerEndpoints} from "../../endpoints/routerEndpoints";
+import {useParams} from "react-router-dom";
+import {Button, Snackbar} from "@material-ui/core";
+import {Server} from "../../../models/Server";
+import {SnackBarTransition} from "../../utils/commonComponents";
 
 const fakeServers: Server[] = [
     {
@@ -39,21 +34,13 @@ const fakeServers: Server[] = [
     }
 ];
 
-function SnackBarTransition(props: TransitionProps) {
-    return <Slide {...props} direction="up"/>;
-}
-
-const SnackBarButton = (
-    <Button color="secondary" size="small">Close</Button>
-);
-
 export function ServerManagement(props: ServerProps) {
     const {updateTitle} = props;
-    const paramName = useParams<ServerRouteParams>()[routerEndpoints.servers.detail.paramName];
+    const paramName = useParams<ServerRouteParams>()[routerEndpoints.servers.edit.paramName];
     const [servers, setServers] = useState([] as Server[]);
     const [alertMessage, setAlertMessage] = useState('');
     useEffect(() => {
-        updateTitle();
+        updateTitle(routerEndpoints.servers.name);
     }, [updateTitle]);
     useEffect(() => {
         // todo: make http requests
@@ -102,30 +89,24 @@ export function ServerManagement(props: ServerProps) {
     const onPerformDelete = (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.DELETE});
     const onPerformAdd = (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.ADD});
 
+    const onCloseSnackBar = () => setAlertMessage('');
+
     let child: ReactNode;
     switch (props.routeType) {
         case ServerRouteType.LIST: {
             child = <ServerList servers={servers}/>;
             break;
         }
-        case ServerRouteType.DETAIL: {
+        case ServerRouteType.EDIT: {
             const i = servers.findIndex((s: Server) => s.name === paramName);
             if (i < 0) {
-                child = <Redirect to={routerEndpoints.invalid.url}/>
+                child = <ServerList servers={servers}/>;
             } else {
                 child = <ServerEdit onSave={onPerformUpdate} server={servers[i]} onDelete={onPerformDelete}/>;
             }
             break;
         }
         case ServerRouteType.NEW: {
-            const server: Server = {
-                description: "",
-                name: "",
-                requireAuthentication: false,
-                requireAuthorization: false,
-                slug: "",
-                url: ""
-            };
             child = <ServerEdit onSave={onPerformAdd}/>;
             break;
         }
@@ -139,7 +120,7 @@ export function ServerManagement(props: ServerProps) {
                 open={alertMessage !== '' && alertMessage != null}
                 TransitionComponent={SnackBarTransition}
                 message={alertMessage}
-                action={SnackBarButton}
+                action={<Button color="secondary" size="small" onClick={onCloseSnackBar}>Close</Button>}
             />
         </div>
     );

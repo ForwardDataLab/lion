@@ -1,7 +1,7 @@
 export const AppTheme = {
     palette: {
-        primary: {main: '#455A64'},
-        secondary: {main: '#f50057'}
+        primary: {main: '#eceff1'},
+        secondary: {main: '#ed1250'}
     },
     typography: {
         fontFamily: [

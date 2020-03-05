@@ -6,17 +6,3 @@ export interface Server {
     readonly requireAuthentication: boolean,
     readonly requireAuthorization: boolean
 }
-
-export enum ServerUpdateType {
-    ADD, DELETE, UPDATE
-}
-
-export interface ServerUpdateRequest {
-    readonly data: Server,
-    readonly type: ServerUpdateType
-}
-
-export interface ServerUpdateResult {
-    readonly isSuccess: boolean,
-    readonly errorMessage: string | null
-}

@@ -1,6 +1,6 @@
-import {JSONObject} from "./Json";
+import {JSONObject} from "../types/Json";
 
-export const enum QuerySchedule {
+export enum QuerySchedule {
     AD_HOC = 'Ad hoc',
     PER_MINUTE = 'Once a minute',
     PER_HOUR = 'Once an hour',
@@ -8,8 +8,6 @@ export const enum QuerySchedule {
     PER_WEEK = 'Once a week',
     PER_MONTH = 'Once a month'
 }
-
-export type QueryNode = JSONObject;
 
 export type QueryData = JSONObject;
 
@@ -19,10 +17,18 @@ export interface QueryRecord {
     data: QueryData
 }
 
-export interface Query {
+export interface QueryGeneral {
     name: string,
     source: string,
     schedule: QuerySchedule,
-    history: QueryRecord[],
-    structure: QueryNode
+}
+
+export interface QueryHistory {
+    name: string,
+    records: QueryRecord[],
+}
+
+export interface QuerySchema {
+    name: string,
+    schema: JSONObject,
 }

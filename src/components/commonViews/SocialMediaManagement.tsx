@@ -1,9 +1,10 @@
 import React, {Fragment, useCallback, useContext, useEffect, useState} from "react";
 import {globalStore} from "../../store/globalState";
 import {SocialMediaSource} from "../../models/SocialMediaSource";
-import {socialMediaStyles} from "../../styles/socialMedia";
+import {socialMediaStyles} from "../../styles/socialMediaStyle";
 import {Button, List, ListItem, ListItemText} from "@material-ui/core";
 import {ViewCommonProps} from "../../types/ViewProps";
+import {routerEndpoints} from "../endpoints/routerEndpoints";
 
 interface SocialMediaProps extends ViewCommonProps {
 }
@@ -40,7 +41,7 @@ export function SocialMediaManagement(props: SocialMediaProps) {
     const [mediaSources, setMediaSources] = useState<SocialMediaSource[]>([]);
     const {updateTitle} = props;
     useEffect(() => {
-        updateTitle();
+        updateTitle(routerEndpoints.socialMedia.name);
     }, [updateTitle]);
     useEffect(() => {
         (async () => {

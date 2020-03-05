@@ -1,0 +1,1327 @@
+{
+  "name": "query",
+  "inputs": [],
+  "output": {
+    "type": {
+      "kind": "OBJECT",
+      "name": "redditQuery",
+      "fields": [
+        {
+          "args": [
+            {
+              "name": "query",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "value": "uiuc",
+              "description": null,
+              "defaultValue": null
+            }
+          ],
+          "name": "searchSubredditTopics",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Subreddit",
+              "ofType": null
+            }
+          },
+          "description": "Searches subreddits by topic.Returns An Array of subreddit objects corresponding to the search results",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "query",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            }
+          ],
+          "name": "searchSubreddits",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Subreddit",
+              "ofType": null
+            }
+          },
+          "description": "Searches subreddits by title and description.Returns A Listing containing Subreddits",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "query",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "time",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": "hour, day, week, month, year, all",
+              "defaultValue": "\"all\""
+            },
+            {
+              "name": "subreddit",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "restrictSr",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": "Restricts search results to the given subreddit",
+              "defaultValue": "false"
+            },
+            {
+              "name": "sort",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": "relevance, hot, top, new, comments",
+              "defaultValue": "\"relevance\""
+            },
+            {
+              "name": "syntax",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": "cloudsearch, lucene, plain",
+              "defaultValue": null
+            },
+            {
+              "name": "count",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            }
+          ],
+          "name": "search",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Link",
+              "ofType": null
+            }
+          },
+          "description": "Conducts a search of reddit submissions.Returns:A Listing containing the search results.",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "id",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            }
+          ],
+          "name": "getCompleteReplies",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Comment",
+              "ofType": null
+            }
+          },
+          "description": "given a submission id, get all the content and replies within.",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "subredditName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getNewComments",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Comment",
+              "ofType": null
+            }
+          },
+          "description": "Gets a Listing of new comments.Return A Listing containing the retrieved comments.",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "query",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "exact",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "false"
+            },
+            {
+              "name": "includeNsfw",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "true"
+            }
+          ],
+          "name": "searchSubredditNames",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            }
+          },
+          "description": "Searches for subreddits given a query. Returns An Array containing subreddit names",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getPopularSubreddits",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Subreddit",
+              "ofType": null
+            }
+          },
+          "description": "Gets a list of subreddits, arranged by popularity.Returns A Listing containing Subreddits",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getNewSubreddits",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Subreddit",
+              "ofType": null
+            }
+          },
+          "description": "Gets a list of subreddits, arranged by age. Returns A Listing containing Subreddits",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getGoldSubreddits",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Subreddit",
+              "ofType": null
+            }
+          },
+          "description": "Gets a list of gold-exclusive subreddits. Returns A Listing containing Subreddits",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getDefaultSubreddits",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Subreddit",
+              "ofType": null
+            }
+          },
+          "description": "Gets a list of default subreddits. Returns A Listing containing Subreddits",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "subredditName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getHot",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Link",
+              "ofType": null
+            }
+          },
+          "description": "Gets a Listing of hot posts. Return A Listing containing the retrieved submissions.",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "subredditName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getNew",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Link",
+              "ofType": null
+            }
+          },
+          "description": "Gets a Listing of new posts. Return A Listing containing the retrieved submissions.",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "subredditName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getTop",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Link",
+              "ofType": null
+            }
+          },
+          "description": "Gets a Listing of top posts. Return A Listing containing the retrieved submissions.",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "subredditName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getControversial",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Link",
+              "ofType": null
+            }
+          },
+          "description": "Gets a Listing of controversial posts. Return A Listing containing the retrieved submissions.",
+          "isDeprecated": false,
+          "deprecationReason": null
+        },
+        {
+          "args": [
+            {
+              "name": "subredditName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "defaultValue": "0"
+            },
+            {
+              "name": "extra",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": "for fetchMore",
+              "defaultValue": "0"
+            }
+          ],
+          "name": "getRising",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "OBJECT",
+              "name": "Link",
+              "ofType": null
+            }
+          },
+          "description": "Gets a Listing of rising posts. Return A Listing containing the retrieved submissions.",
+          "isDeprecated": false,
+          "deprecationReason": null
+        }
+      ],
+      "enumValues": null,
+      "interfaces": [],
+      "description": "",
+      "inputFields": null,
+      "possibleTypes": null
+    },
+    "isAList": "false",
+    "isObject": "true",
+    "isScalar": "false"
+  },
+  "children": [
+    {
+      "name": "searchSubredditTopics",
+      "inputs": [
+        {
+          "name": "query",
+          "value": "uiuc",
+          "inputType": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          },
+          "description": null
+        }
+      ],
+      "output": {
+        "type": {
+          "kind": "OBJECT",
+          "name": "Subreddit",
+          "fields": [
+            {
+              "args": [],
+              "name": "accounts_active",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "accounts_active_is_fuzzed",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "advertiser_category",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "allow_images",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "banner_img",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "banner_size",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "created",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "created_utc",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "comment_score_hide_mins",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "collapse_deleted_comments",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "description_html",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "display_name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "display_name_prefixed",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "header_img",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "header_size",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "header_title",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "hide_ads",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "id",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "icon_size",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "lang",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "key_color",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "over18",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "public_description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "public_description_html",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "public_traffic",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "quarantine",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "show_media",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "show_media_preview",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "subscribers",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "spoilers_enabled",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "suggested_comment_sort",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "submission_type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "submit_text",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "submit_link_label",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "submit_text_label",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "submit_text_html",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "subreddit_type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "title",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "url",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "user_sr_theme_enabled",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "user_is_banned",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "user_is_contributor",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "user_is_moderator",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "user_is_subscriber",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "user_is_muted",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "wiki_enabled",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "args": [],
+              "name": "whitelist_status",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "enumValues": null,
+          "interfaces": [],
+          "description": "",
+          "inputFields": null,
+          "possibleTypes": null
+        },
+        "isAList": "false",
+        "isObject": "true",
+        "isScalar": "false"
+      },
+      "children": [
+        {
+          "name": "accounts_active",
+          "inputs": [],
+          "output": {
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "fields": null,
+              "enumValues": null,
+              "interfaces": null,
+              "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. ",
+              "inputFields": null,
+              "possibleTypes": null
+            },
+            "isAList": "false",
+            "isObject": "false",
+            "isScalar": "true"
+          },
+          "children": [],
+          "selected": true
+        },
+        {
+          "name": "id",
+          "inputs": [],
+          "output": {
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "fields": null,
+              "enumValues": null,
+              "interfaces": null,
+              "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+              "inputFields": null,
+              "possibleTypes": null
+            },
+            "isAList": "false",
+            "isObject": "false",
+            "isScalar": "true"
+          },
+          "children": [],
+          "selected": true
+        }
+      ],
+      "selected": true
+    }
+  ],
+  "selected": true
+}

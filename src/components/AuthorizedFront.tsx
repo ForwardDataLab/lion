@@ -15,17 +15,18 @@ import {
 import clsx from "clsx";
 import {Explore, Help, Menu, People, Search, Share, Web} from "@material-ui/icons";
 import {BrowserRouter as Router, NavLink, Redirect, Route, Switch} from "react-router-dom";
-import {routerEndpoints} from "../data/routerEndpoints";
-import {QueriesManagement} from "./commonViews/QueriesManagement";
+import {routerEndpoints} from "./endpoints/routerEndpoints";
+import {QueryManagement, QueryRouteType} from "./commonViews/queries/QueryManagement";
 import {SocialMediaManagement} from "./commonViews/SocialMediaManagement";
 import {ApplicationsManagement} from "./commonViews/ApplicationsManagement";
-import React, {useCallback, useContext, useState} from "react";
+import React, {useContext, useState} from "react";
 import {appStyles} from "../styles/app";
 import {RouteProps} from "react-router";
-import {ServerManagement, ServerRouteType} from "./adminViews/servers/ServerManagement";
+import {ServerManagement} from "./adminViews/servers/ServerManagement";
 import {UserManagement} from "./adminViews/UserManagement";
 import {globalStore} from "../store/globalState";
 import {NotFoundPage} from "./commonViews/NotFoundPage";
+import {ServerRouteType} from "../types/ServerProps";
 
 interface ExtendedRouteProps extends RouteProps {
     isAuthenticated: boolean
@@ -58,12 +59,6 @@ export function AuthorizedFront() {
     const {state} = useContext(globalStore);
     const styles = appStyles();
     const theme = useTheme();
-    const onActivePageQueries = useCallback(() => setTitle(routerEndpoints.queries.name), []);
-    const onActivePageSocialMedia = useCallback(() => setTitle(routerEndpoints.socialMedia.name), []);
-    const onActivePageMetaQueries = useCallback(() => setTitle(routerEndpoints.metaQueries.name), []);
-    const onActivePageApplications = useCallback(() => setTitle(routerEndpoints.applications.name), []);
-    const onActivePageServers = useCallback(() => setTitle(routerEndpoints.servers.name), []);
-    const onActivePageUsers = useCallback(() => setTitle(routerEndpoints.users.name), []);
     const user = state.user;
     if (user == null) {
         throw new Error('user cannot be null');
@@ -160,30 +155,36 @@ export function AuthorizedFront() {
 
                 <div className={clsx(styles.content, {[styles.contentShift]: isOpen})}>
                     <Switch>
-                        <Route path={routerEndpoints.queries.url}>
-                            <QueriesManagement updateTitle={onActivePageQueries}/>
+                        <Route exact path={'/'}>
+                            <QueryManagement routeType={QueryRouteType.LIST} updateTitle={setTitle}/>
                         </Route>
-                        <Route path={routerEndpoints.socialMedia.url}>
-                            <SocialMediaManagement updateTitle={onActivePageSocialMedia}/>
+                        <Route exact path={routerEndpoints.queries.url}>
+                            <QueryManagement routeType={QueryRouteType.LIST} updateTitle={setTitle}/>
                         </Route>
-                        <Route path={routerEndpoints.applications.url}>
-                            <ApplicationsManagement updateTitle={onActivePageApplications}/>
+                        <Route exact path={routerEndpoints.queries.create.url}>
+                            <QueryManagement routeType={QueryRouteType.NEW} updateTitle={setTitle}/>
                         </Route>
-                        <PrivateRoute isAuthenticated={user.isAdmin} path={routerEndpoints.servers.url}>
-                            <ServerManagement routeType={ServerRouteType.LIST} updateTitle={onActivePageServers}/>
-                        </PrivateRoute>
-                        <PrivateRoute isAuthenticated={user.isAdmin} path={routerEndpoints.servers.create.url}>
-                            <ServerManagement routeType={ServerRouteType.NEW} updateTitle={onActivePageServers}/>
-                        </PrivateRoute>
-                        <PrivateRoute isAuthenticated={user.isAdmin} path={routerEndpoints.servers.detail.urlDynamic}>
-                            <ServerManagement routeType={ServerRouteType.DETAIL} updateTitle={onActivePageServers}/>
-                        </PrivateRoute>
-                        <PrivateRoute isAuthenticated={user.isAdmin} path={routerEndpoints.users.url}>
-                            <UserManagement updateTitle={onActivePageUsers}/>
-                        </PrivateRoute>
-                        <Route path={'/'}>
-                            <QueriesManagement updateTitle={onActivePageQueries}/>
+                        <Route path={routerEndpoints.queries.history.urlDynamic}>
+                            <QueryManagement routeType={QueryRouteType.HISTORY} updateTitle={setTitle}/>
                         </Route>
+                        <Route exact path={routerEndpoints.socialMedia.url}>
+                            <SocialMediaManagement updateTitle={setTitle}/>
+                        </Route>
+                        <Route exact path={routerEndpoints.applications.url}>
+                            <ApplicationsManagement updateTitle={setTitle}/>
+                        </Route>
+                        <PrivateRoute exact isAuthenticated={user.isAdmin} path={routerEndpoints.servers.url}>
+                            <ServerManagement routeType={ServerRouteType.LIST} updateTitle={setTitle}/>
+                        </PrivateRoute>
+                        <PrivateRoute exact isAuthenticated={user.isAdmin} path={routerEndpoints.servers.create.url}>
+                            <ServerManagement routeType={ServerRouteType.NEW} updateTitle={setTitle}/>
+                        </PrivateRoute>
+                        <PrivateRoute isAuthenticated={user.isAdmin} path={routerEndpoints.servers.edit.urlDynamic}>
+                            <ServerManagement routeType={ServerRouteType.EDIT} updateTitle={setTitle}/>
+                        </PrivateRoute>
+                        <PrivateRoute exact isAuthenticated={user.isAdmin} path={routerEndpoints.users.url}>
+                            <UserManagement updateTitle={setTitle}/>
+                        </PrivateRoute>
                         <Route><NotFoundPage/></Route>
                     </Switch>
                 </div>

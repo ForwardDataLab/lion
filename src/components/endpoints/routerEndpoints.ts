@@ -5,7 +5,15 @@ export const routerEndpoints = {
     },
     queries: {
         url: `/q`,
-        name: `Queries`
+        name: `Queries`,
+        create: {
+            url: `/q/create`
+        },
+        history: {
+            paramName: `name`,
+            urlBase: `/q/history/`,
+            urlDynamic: `/q/history/:name`
+        }
     },
     metaQueries: {
         url: `/mq`,
@@ -17,15 +25,15 @@ export const routerEndpoints = {
     },
     servers: {
         url: `/ad-servers`,
+        name: `Servers`,
         create: {
-            url: `/ad-servers/create-new-server`
+            url: `/ad-servers/create`
         },
-        detail: {
+        edit: {
             paramName: `name`,
-            urlBase: `/ad-servers/view/`,
-            urlDynamic: `/ad-servers/view/:name`
-        },
-        name: `Servers`
+            urlBase: `/ad-servers/edit/`,
+            urlDynamic: `/ad-servers/edit/:name`
+        }
     },
     users: {
         url: `/ad-users`,

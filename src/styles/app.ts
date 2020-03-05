@@ -74,7 +74,7 @@ export const appStyles = makeStyles((theme: Theme) => ({
     },
     linkActiveStyle: {
         '&> div': {
-            backgroundColor: fade(theme.palette.primary.main, 0.12) // hack the active button color in drawer
+            backgroundColor: fade(theme.palette.primary.main, 0.8) // hack the active button color in drawer
         }
     }
 }));

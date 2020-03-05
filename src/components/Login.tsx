@@ -1,7 +1,6 @@
 import React, {useContext, useState} from "react";
 import Axios from "axios";
 import {Button, Container, Paper, TextField} from "@material-ui/core";
-import {User} from "../models/User";
 import {makeStyles} from "@material-ui/core/styles";
 import {globalStore, SET_USER} from "../store/globalState";
 
@@ -65,7 +64,7 @@ export function Login() {
                 // todo: handle post responses
                 console.error(e)
             }
-            dispatch({type: SET_USER, payload: new User('MockUser', true)});
+            dispatch({type: SET_USER, payload: {userName: 'MockUser', isAdmin: true}});
         }
     };
 

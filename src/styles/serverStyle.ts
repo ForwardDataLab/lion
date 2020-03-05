@@ -1,22 +1,16 @@
 import {makeStyles, Theme} from "@material-ui/core/styles";
-import {commonPageStyles} from "./commonStyles";
+import {commonButtonStyles, commonPageStyles, errorButtonStyles, formStyles} from "./commonStyles";
+
 
 export const serverStyles = makeStyles((theme: Theme) => ({
     ...commonPageStyles(theme),
+    ...errorButtonStyles(theme),
+    ...commonButtonStyles(theme),
+    ...formStyles(theme),
     detailPanelItemTitle: {
         fontWeight: 500
     },
     detailPanelItemContent: {},
-    buttonWrapper: {
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    buttonRightEnd: {
-        marginLeft: 'auto'
-    },
-    form: {
-        margin: `${theme.spacing(2)}, 0`
-    },
     grid: {
         maxWidth: '100%',
     },

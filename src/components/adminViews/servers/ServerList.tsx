@@ -1,58 +1,23 @@
-import React, {forwardRef, useCallback} from 'react';
+import React, {useState} from 'react';
 
-import {Server} from "../../../types/Server";
-import {serverStyles} from "../../../styles/servers";
+import {serverStyles} from "../../../styles/serverStyle";
 import MaterialTable, {Action} from "material-table";
 import {Button, Grid} from '@material-ui/core';
 import {Redirect} from 'react-router-dom';
-import {routerEndpoints} from "../../../data/routerEndpoints";
+import {routerEndpoints} from "../../endpoints/routerEndpoints";
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import KeyboardArrowRightOutlinedIcon from '@material-ui/icons/KeyboardArrowRightOutlined';
-import FirstPageOutlinedIcon from '@material-ui/icons/FirstPageOutlined';
-import LastPageOutlinedIcon from '@material-ui/icons/LastPageOutlined';
 import ArrowRightOutlinedIcon from '@material-ui/icons/ArrowRightOutlined';
-import KeyboardArrowLeftOutlinedIcon from '@material-ui/icons/KeyboardArrowLeftOutlined';
-import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 import clsx from "clsx";
+import {Server} from "../../../models/Server";
+import {ServerListDetailPanelProps, ServerListOption, ServerListProps} from "../../../types/ServerProps";
+import {materialTableIcons} from "../../utils/commonComponents";
 
-
-interface ServerListDetailPanelProps {
-    server: Server
-}
-
-interface ServerListProps {
-    servers: Server[]
-}
 
 const tableColumns = [
     {title: 'Name', field: 'name'},
     {title: 'URL', field: 'url'}
-];
-
-const tableActions: Action<Server>[] = [
-    {
-        icon: () => <EditOutlinedIcon color='secondary'/>,
-        tooltip: 'Edit Server',
-        onClick: (e, server) => {
-            if (Array.isArray(server)) {
-                throw new Error('onClick in material table should not involve multiple server instances');
-            }
-            return (
-                <Redirect to={routerEndpoints.servers.detail.urlBase + server.name}/>
-            )
-        }
-    }, {
-        icon: () => <RefreshOutlinedIcon color='secondary'/>,
-        tooltip: 'Refresh Schema',
-        onClick: (e, server) => {
-            if (Array.isArray(server)) {
-                throw new Error('onClick in material table should not involve multiple server instances');
-            }
-            console.log(`clicked ${server.name}`);
-        }
-    }
 ];
 
 function convertBoolToString(b: boolean) {
@@ -94,8 +59,37 @@ function ServerListDetailPanel(props: ServerListDetailPanelProps) {
 
 export function ServerList(props: ServerListProps) {
     const styles = serverStyles();
-    const onClickNew = useCallback(() => (<Redirect to={routerEndpoints.servers.create.url}/>), []);
-    return (
+    const [option, setOption] = useState(ServerListOption.NONE);
+    const [server, setServer] = useState<Server | null>(null);
+    const onClickNew = () => {
+        setOption(ServerListOption.NEW);
+    };
+
+    const tableActions: Action<Server>[] = [
+        {
+            icon: () => <EditOutlinedIcon color='secondary'/>,
+            tooltip: 'Edit Server',
+            onClick: (e, server) => {
+                if (Array.isArray(server)) {
+                    throw new Error('onClick in material table should not involve multiple server instances');
+                }
+                setOption(ServerListOption.DETAIL);
+                setServer(server);
+            }
+        }, {
+            icon: () => <RefreshOutlinedIcon color='secondary'/>,
+            tooltip: 'Refresh Schema',
+            onClick: (e, server) => {
+                if (Array.isArray(server)) {
+                    throw new Error('onClick in material table should not involve multiple server instances');
+                }
+                console.log(`clicked ${server.name}`);
+            }
+        }
+    ];
+    const renderedRedirectNew = (<Redirect to={routerEndpoints.servers.create.url}/>);
+    const renderedRedirectUpdate = (<Redirect to={routerEndpoints.servers.edit.urlBase + server?.name}/>);
+    const renderedList = (
         <div>
             <h1 className={styles.titleStyle}>All Servers</h1>
             <small className={styles.helperTextStyle}>Click on "Refresh" to refresh the schema regularly</small>
@@ -103,7 +97,9 @@ export function ServerList(props: ServerListProps) {
                 <Button
                     className={styles.buttonRightEnd}
                     color="secondary"
-                    startIcon={<AddCircleOutlineOutlinedIcon/>}>
+                    startIcon={<AddCircleOutlineOutlinedIcon/>}
+                    onClick={onClickNew}
+                >
                     Add New Server
                 </Button>
             </div>
@@ -113,7 +109,8 @@ export function ServerList(props: ServerListProps) {
                     showTitle: false,
                     search: false,
                     actionsColumnIndex: -1,
-                    paginationType: 'stepped'
+                    paginationType: 'stepped',
+                    pageSizeOptions: []
                 }}
                 columns={tableColumns}
                 actions={tableActions}
@@ -121,13 +118,7 @@ export function ServerList(props: ServerListProps) {
                 components={{
                     Container: (props) => <div {...props}/>
                 }}
-                icons={{
-                    FirstPage: forwardRef((props, ref) => <FirstPageOutlinedIcon {...props} ref={ref}/>),
-                    LastPage: forwardRef((props, ref) => <LastPageOutlinedIcon {...props} ref={ref}/>),
-                    NextPage: forwardRef((props, ref) => <KeyboardArrowRightOutlinedIcon {...props} ref={ref}/>),
-                    PreviousPage: forwardRef((props, ref) => <KeyboardArrowLeftOutlinedIcon {...props} ref={ref}/>),
-                    SortArrow: forwardRef((props, ref) => <ArrowUpwardOutlinedIcon {...props} ref={ref}/>),
-                }}
+                icons={materialTableIcons}
                 detailPanel={[
                     {
                         icon: () => (<ArrowRightOutlinedIcon/>),
@@ -140,4 +131,15 @@ export function ServerList(props: ServerListProps) {
             />
         </div>
     );
+
+    switch (option) {
+        case ServerListOption.NEW:
+            return renderedRedirectNew;
+        case ServerListOption.DETAIL:
+            return renderedRedirectUpdate;
+        case ServerListOption.NONE:
+            return renderedList;
+        default:
+            throw new Error('Invalid ServerListOption value');
+    }
 }

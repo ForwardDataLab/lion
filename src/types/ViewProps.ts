@@ -1,3 +1,3 @@
 export interface ViewCommonProps {
-    updateTitle(): void;
+    updateTitle(title: string): void;
 }

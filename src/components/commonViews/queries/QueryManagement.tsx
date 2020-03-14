@@ -6,9 +6,9 @@ import {ServerRouteParams} from "../../../types/ServerProps";
 import {Button, Snackbar} from "@material-ui/core";
 import {QueryList} from "./QueryList";
 import {useParams} from "react-router-dom";
-import {QueryCreate} from "./QueryCreate";
 import {QueryHistory} from "./QueryHistory";
 import {SnackBarTransition} from "../../utils/commonComponents";
+import {QueryCreate} from "./QueryCreate";
 
 export enum QueryRouteType {
     LIST, NEW, HISTORY
@@ -105,7 +105,8 @@ export function QueryManagement(props: QueryProps) {
             break;
         }
         case QueryRouteType.NEW: {
-            child = <QueryCreate/>;
+            child = null;
+            child = <QueryCreate addQuery={onPerformAdd}/>;
             break;
         }
         case QueryRouteType.HISTORY: {

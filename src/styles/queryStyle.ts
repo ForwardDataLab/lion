@@ -47,6 +47,8 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
     },
     queryCreateVizPanel: {
         width: `100%`,
-        height: `100%`
+        height: `100%`,
+        border: `1px solid ${theme.palette.primary.main}`,
+        borderRadius: `10px`
     }
 }));

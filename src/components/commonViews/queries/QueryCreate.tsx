@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {QueryGeneral, QuerySchedule} from "../../../models/Query";
 import {JSONObject} from "../../../types/Json";
-import fakeSchema from "../../../data/fakeSchema1.json";
+import fakeSchema from "../../../data/fakeSchema2.json";
 import {isBlank} from "../../utils/commonMethods";
 import {Button, FormControl, Grid, InputLabel, MenuItem, Select, Snackbar, TextField} from "@material-ui/core";
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';

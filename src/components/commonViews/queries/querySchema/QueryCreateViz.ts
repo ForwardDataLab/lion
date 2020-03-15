@@ -41,7 +41,8 @@ function createTree(currentObject: JSONObject, allTypes: VizTypeMemoization, par
             parentName,
             baseObjectName: name,
             name,
-            children
+            children,
+            hasChildren: true
         };
     } else {
         // a field object
@@ -54,7 +55,8 @@ function createTree(currentObject: JSONObject, allTypes: VizTypeMemoization, par
                 parentName: parentName as string,
                 baseObjectName,
                 name,
-                children: null
+                children: null,
+                hasChildren: false
             };
         } else {
             const newBaseObject = allTypes[(type.ofType as JSONObject).name as string];
@@ -62,7 +64,8 @@ function createTree(currentObject: JSONObject, allTypes: VizTypeMemoization, par
                 parentName: parentName as string,
                 baseObjectName,
                 name,
-                children: [createTree(newBaseObject, allTypes, name)]
+                children: [createTree(newBaseObject, allTypes, name)],
+                hasChildren: true
             };
         }
     }
@@ -81,6 +84,7 @@ export interface VizNode {
     parentName: string | null,
     baseObjectName: string,
     name: string,
+    hasChildren: boolean,
     children: VizNode[] | null
 }
 
@@ -101,92 +105,73 @@ export const createViz = (props: QueryVizProps) => {
     if (!allTypeObjects.hasOwnProperty(startingString)) {
         throw new Error('Starting query name does not exist');
     }
+
     const width = 900;
     const height = 500;
     const $svg = d3.select(props.containerElem)
         .append('svg')
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", `0 0 ${width} ${height}`);
+    const $container = $svg.call(
+        d3.zoom().on("zoom", () => {
+            const newCoord = d3.event.transform.apply([width/2, -height/2]);
+            const newScale = d3.event.transform.scale(1);
+            $container.attr("x", newCoord[0]);
+            $container.attr('y', newCoord[1]);
+            $container.attr('transform', `scale(${newScale.k})`)
+        }) as any)
+        .append('svg')
+        .style('overflow', 'visible')
+        .attr('x', width/2)
+        .attr('y', -height/2);
     const tree = d3.tree().size([width, height]);
     const rootData = createTree(allTypeObjects[startingString], allTypeObjects, null);
-    const root = d3.hierarchy(rootData, (d: any) => d.children);
-
-    function findChildren(d: any) {
-        // assume a flat structure
-        // a base type
-        if (allTypeObjects.hasOwnProperty(d.name)) {
-            const baseObject = allTypeObjects[d.name];
-            return (baseObject.fields as JSONObject[]).map(item => ({
-                parentName: d.name,
-                name: item.name,
-                baseObjectName: baseObject.name,
-                hasChildren: (item.type as JSONObject).name != null
-            }));
-        }
-        // a field
-        let baseObject = findNode(allTypeObjects[d.baseObjectName as string], d.name);
-        if (baseObject == null) {
-            throw new Error('Base object cannot be null');
-        }
-        const typeObject = baseObject.type as JSONObject;
-        if (typeObject.name == null) {
-            const ofType = typeObject.ofType as JSONObject;
-            const name = ofType.name as string;
-            if (allTypeObjects.hasOwnProperty(name)) {
-                baseObject = allTypeObjects[name];
-            }
-            if (baseObject == null) {
-                throw new Error('Base object cannot be null');
-            }
-        }
-        const baseObjectName = baseObject.name as string;
-        return (baseObject.fields as JSONObject[]).map(item => ({
-            parentName: d.name,
-            name: item.name,
-            baseObjectName: baseObjectName,
-            hasChildren: (item.type as JSONObject).name != null
-        }));
-    }
+    (rootData as any).savedChildren = rootData.children;
+    rootData.children = null;
+    const root = d3.hierarchy(rootData, d => d.children);
+    (root as any).x0 = height/2;
+    (root as any).y0 = 0;
+    // root.descendants().forEach((item: any) => {
+    //     console.log(item)
+    //     item.data.savedChildren = item.data.children;
+    //     item.data.children = null;
+    // });
+    const transition = $svg.transition()
+        .duration(200)
+        .attr("viewBox", `0, 0, ${width}, ${height}`);
 
     function update(source: any) {
-        tree(root);
         console.log(root)
         const nodes = root.descendants();
-        console.log(nodes);
         const links = root.links();
-        console.log(links)
-        const $nodes = $svg.selectAll('g.nodes').data(nodes);
+        tree(root);
+        const $nodes = $container.selectAll('g.nodes').data(nodes, datum => (datum as any).data.name);
         const $nodesEnter = $nodes.enter()
             .append('g')
             .attr('class', 'nodes')
-            .attr("transform", (d: any) => {
-                return `translate(${width/2}, ${height/2})`;
+            .attr("transform", (d: any) => `translate(${source.y0},${source.x0})`)
+            .attr("cursor", (d: any) => {
+                return d.data.hasChildren ? "pointer" : `default`
+            })
+            .on('click', (d: any) => {
+                const data = d.data;
+                console.log('before', data);
+                if (data.children != null) {
+                    props.onDeselectNode(data as VizNode);
+                    data.savedChildren = data.children;
+                    data.children = null;
+                } else {
+                    props.onSelectNode(data as VizNode, findNode(allTypeObjects[data.baseObjectName as string], data.name as string) as JSONObject);
+                    data.children = data.savedChildren;
+                    data.savedChildren = null;
+                }
+                console.log('after', data);
+                update(d);
             });
         $nodesEnter.append('circle')
             .attr('class', 'node')
             .attr('r', '5px')
-            .attr("cursor", (d: any) => {
-                console.log('\n\n')
-                console.log(d);
-                return d.data.hasChildren ? "pointer" : `none`
-            })
-            .style('fill', (d: any) => d.data.hasChildren ? `#388e3c` : `#795548`)
-            .on('click', (d: any) => {
-                if (d.hasOwnProperty('children')) {
-                    props.onDeselectNode(d as VizNode);
-                    d.savedChildren = d.children;
-                    delete d.children;
-                } else {
-                    props.onSelectNode(d as VizNode, findNode(allTypeObjects[d.data.baseObjectName as string], d.data.name as string) as JSONObject);
-                    if (d.hasOwnProperty('savedChildren')) {
-                        d.children = d.savedChildren;
-                        delete d.savedChildren;
-                    } else {
-                        d.children = findChildren(d.data).map(item => ({data: item}));
-                    }
-                }
-                update(d);
-            });
+            .style('fill', (d: any) => d.data.hasChildren ? `#388e3c` : `#212121`);
 
         $nodesEnter.append("text")
             .attr("dy", "0.3em")
@@ -196,20 +181,41 @@ export const createViz = (props: QueryVizProps) => {
             .attr("stroke-linejoin", "round")
             .attr("stroke-width", 3);
 
-        const $links = $svg.append("g")
+        $nodes.merge($nodesEnter as any).transition(transition as any)
+            .attr("transform", (d: any) => `translate(${d.y},${d.x})`)
+            .attr("fill-opacity", 1)
+            .attr("stroke-opacity", 1);
+
+        // Transition exiting nodes to the parent's new position.
+        $nodes.exit().transition(transition as any).remove()
+            .attr("transform", (d: any) => `translate(${source.y},${source.x})`)
+            .attr("fill-opacity", 0)
+            .attr("stroke-opacity", 0);
+
+        const diagonal = d3.linkHorizontal().x((d: any) => d.y).y((d: any) => d.x);
+        const $links = $container.selectAll("path")
+                .data(links, (d: any) => d.target.data.name);
+        const $linksEnter = $links.enter()
+            .append('path')
             .attr("fill", "none")
             .attr("stroke", `#424242`)
             .attr("stroke-opacity", 0.4)
             .attr("stroke-width", 1.5)
-            .selectAll("path")
-            .data(links, (d: any) => d.target.name);
-
-        const diagonal = d3.linkHorizontal().x((d: any) => d.y).y((d: any) => d.x);
-        $links.enter().append("path")
-            .attr("d", d => {
+            .attr("d", (d: any) => {
                 console.log(d)
-                return diagonal(d as any);
+                return diagonal(d);
             });
+
+        // Transition links to their new position.
+        $links.merge($linksEnter as any).transition(transition as any)
+            .attr("d", (d: any) => diagonal(d));
+
+        // Transition exiting nodes to the parent's new position.
+        $links.exit().transition(transition as any).remove()
+            .attr("d", (d: any) => {
+                return diagonal(d);
+            });
+
         root.eachBefore((d: any) => {
             d.x0 = d.x;
             d.y0 = d.y;

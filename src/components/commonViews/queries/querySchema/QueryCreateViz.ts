@@ -157,17 +157,18 @@ export const createViz = (props: QueryVizProps) => {
             $svgContainer.attr('y', newCoordinate[1]);
             $container.attr('transform', `scale(${newScale.k})`)
         }) as any);
-    const $nodesWrapper = $container.append('g');
     const $linksWrapper = $container.append('g');
+    const $nodesWrapper = $container.append('g');
     const diagonal = d3.linkHorizontal().x((d: any) => d.y).y((d: any) => d.x);
+    const transition = $svg.transition()
+        .duration(200)
+        .attr("viewBox", `0, 0, ${width}, ${height}`);
 
     function update(source: any) {
         const nodes = root.descendants();
         const links = root.links();
         tree(root);
-        const transition = $svg.transition()
-            .duration(200)
-            .attr("viewBox", `0, 0, ${width}, ${height}`);
+
         const $nodes = $nodesWrapper.selectAll('g.nodes')
             .data(nodes, (datum: any) => datum.data.data.name);
         const $nodesEnter = $nodes.enter()
@@ -209,12 +210,14 @@ export const createViz = (props: QueryVizProps) => {
             });
 
         $nodesEnter.append("text")
-            .attr("dy", "0.3em")
+            .attr("dy", "0.31em")
             .attr("x", (d: any) => d.data.children != null ? -10 : 10)
             .attr("text-anchor", (d: any) => d.data.children != null ? "end" : "start")
             .text((d: any) => d.data.data.name)
+            .clone(true).lower()
             .attr("stroke-linejoin", "round")
-            .attr("stroke-width", 3);
+            .attr("stroke-width", 5)
+            .attr("stroke", "white");
 
         $nodes.merge($nodesEnter as any).transition(transition as any)
             .attr("transform", (d: any) => `translate(${d.y},${d.x})`)

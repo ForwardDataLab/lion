@@ -8,6 +8,7 @@ import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import {SnackBarTransition} from "../../utils/commonComponents";
 import {queryCreateStyles} from "../../../styles/queryStyle";
 import {PathsTree, QuerySchemaViz} from "./QuerySchemaViz";
+import clsx from "clsx";
 
 
 // todo: query request structure is not reasonable, may be more efficient, but need rework at the backend
@@ -27,17 +28,11 @@ export function QueryCreate(props: QueryCreateProps) {
     const [fullSchema, setFullSchema] = useState({} as JSONObject);
     const [allSources, setAllSources] = useState([] as string[]);
     const [name, setName] = useState('');
-    const [source, setSource] = useState(allSources[0]);
+    const [source, setSource] = useState('');
     const [schedule, setSchedule] = useState<QuerySchedule>(allSchedules[0]);
     const [schema, setSchema] = useState({} as PathsTree);
     const [nameErrorMessage, setNameErrorMessage] = useState<string | null>(null);
     const [schemaErrorMessage, setSchemaErrorMessge] = useState<string | null>(null);
-    useEffect(() => {
-        // todo: retrieve schema here
-        (async () => {
-            setFullSchema(fakeSchema);
-        })();
-    }, [setFullSchema]);
     useEffect(() => {
         // todo: retrieve all available sources here
         (async () => {
@@ -51,7 +46,12 @@ export function QueryCreate(props: QueryCreateProps) {
         setName(e.target.value);
     };
     const onUpdateSource = (e: React.ChangeEvent<{ value: unknown }>) => {
-        setSource(e.target.value as string);
+        const newSource = e.target.value as string;
+        setSource(newSource);
+        // todo: fetch schema here
+        (async () => {
+            setFullSchema(fakeSchema);
+        })();
     };
     const onUpdateSchedule = (e: React.ChangeEvent<{ value: unknown }>) => {
         setSchedule(e.target.value as QuerySchedule);
@@ -67,7 +67,7 @@ export function QueryCreate(props: QueryCreateProps) {
             setNameErrorMessage('Schema cannot be empty');
             return;
         }
-        console.log(schema);
+        console.log('schema', schema);
 
         // todo: submit save request here
         props.addQuery({
@@ -129,7 +129,13 @@ export function QueryCreate(props: QueryCreateProps) {
     const visualization = (
         <div>
             <h1 className={styles.titleStyle}>Configure Query</h1>
-            <QuerySchemaViz rawSchema={fakeSchema} setQuerySchema={setSchema}/>
+            {
+                (Object.keys(fullSchema).length !== 0 && fullSchema.constructor === Object) ? (
+                    <QuerySchemaViz rawSchema={fullSchema} setQuerySchema={setSchema}/>
+                ) : (
+                    <small>Source must be selected first</small>
+                )
+            }
         </div>
     );
     return (<div>
@@ -137,13 +143,14 @@ export function QueryCreate(props: QueryCreateProps) {
         <br/>
         {visualization}
         <br/>
-        <div className={styles.buttonWrapper}>
+        <div className={clsx(styles.buttonWrapper, styles.formSubmitSpacing)}>
             <Button
+                variant="contained"
                 color="secondary"
                 className={styles.buttonRightGap}
                 startIcon={<SaveOutlinedIcon/>}
                 onClick={onSaveQuery}>
-                Save
+                Save Form
             </Button>
         </div>
         <Snackbar

@@ -105,14 +105,16 @@ interface VizTypeMemoization {
 
 
 const svgID = `query-create-viz`;
+let cachedRawSchema = {};
 
 /**
  * Source: https://observablehq.com/@d3/collapsible-tree
  */
 export const createViz = (props: QueryVizProps) => {
-    if (document.getElementById(svgID)) {
+    if (props.rawSchema === cachedRawSchema) {
         return;
     }
+    cachedRawSchema = props.rawSchema;
     const schema = (props.rawSchema.data as JSONObject).__schema as JSONObject;
     const startingString = (schema.queryType as JSONObject).name as string;
     const allTypeObjects: VizTypeMemoization = (schema.types as JSONObject[]).reduce((acc: VizTypeMemoization, item) => {
@@ -132,7 +134,6 @@ export const createViz = (props: QueryVizProps) => {
     const rootData = createTree(allTypeObjects[startingString], allTypeObjects, null);
     // calculate all locations prehand
     const root = d3.hierarchy(rootData);
-    console.log('computed root', root);
     (root as any).x0 = height/2;
     (root as any).y0 = 0;
     root.descendants().forEach((item: any) => {
@@ -163,12 +164,18 @@ export const createViz = (props: QueryVizProps) => {
     const transition = $svg.transition()
         .duration(200)
         .attr("viewBox", `0, 0, ${width}, ${height}`);
+    const circleFillCallback = (d: any) => {
+        if (d.data.selected) {
+            return `#ed1250`;
+        } else {
+            return d.data.children != null ? `#0277bd` : `#90a4ae`;
+        }
+    };
 
     function update(source: any) {
         const nodes = root.descendants();
         const links = root.links();
         tree(root);
-        console.log('root', root);
         const $nodes = $nodesWrapper.selectAll('g.nodes')
             .data(nodes, (datum: any) => {
                 return datum.data.data.name;
@@ -178,14 +185,14 @@ export const createViz = (props: QueryVizProps) => {
             .attr('class', 'nodes')
             .attr("transform", (d: any) => `translate(${source.y0},${source.x0})`)
             .attr("cursor", "pointer")
-            .on('click', (d: any) => {
+            .on('click', function clickCallback (d: any) {
                 d3.event.stopPropagation();
                 const data = d.data;
+                data.selected = !data.selected;
                 if (d.children != null) {
                     props.onDeselectNode(data.data as VizNode);
                     d.savedChildren = d.children;
                     d.children = null;
-                    data.selected = false;
                 } else {
                     props.onSelectNode(
                         data.data as VizNode,
@@ -194,23 +201,18 @@ export const createViz = (props: QueryVizProps) => {
                             data.data.name as string
                         ) as JSONObject
                     );
-                    data.selected = true;
                     d.children = d.savedChildren;
                     d.savedChildren = null;
                 }
-                console.log('onClick', d);
+                d3.select(this)
+                    .select('circle')
+                    .attr('fill', circleFillCallback(d));
                 update(d);
             });
         $nodesEnter.append('circle')
             .attr('class', 'node')
             .attr('r', '5px')
-            .style('fill', (d: any) => {
-                if (d.data.data.selected) {
-                    return `#ed1250`;
-                } else {
-                    return d.data.children != null ? `#0277bd` : `#90a4ae`;
-                }
-            });
+            .attr('fill', circleFillCallback);
 
         $nodesEnter.append("text")
             .attr("dy", "0.31em")

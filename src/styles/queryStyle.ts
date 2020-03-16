@@ -20,7 +20,7 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(2),
         backgroundColor: `rgba(236,239,241,0.8)`,
         width: `100%`,
-        height: `100%`,
+        minHeight: `100%`,
         boxSizing: `border-box`,
         borderTopLeftRadius: `10px`,
         borderBottomLeftRadius: `10px`
@@ -43,7 +43,8 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
     queryCreateWrapper: {
         width: `100%`,
         height: `100%`,
-        position: `relative`
+        position: `relative`,
+        marginTop: theme.spacing(4)
     },
     queryCreateInputPanel: {
         width: `240px`,
@@ -58,5 +59,8 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
         height: `100%`,
         border: `1px solid ${theme.palette.primary.main}`,
         borderRadius: `10px`
+    },
+    formSubmitSpacing: {
+        marginTop: theme.spacing(4)
     }
 }));

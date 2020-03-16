@@ -92,6 +92,7 @@ export function QuerySchemaViz(props: QuerySchemaVizProps) {
         if (ref == null) {
             return;
         }
+        console.log('Rerendered Viz');
         createViz({
             rawSchema: rawSchema,
             containerElem: ref,
@@ -113,7 +114,7 @@ export function QuerySchemaViz(props: QuerySchemaVizProps) {
             <div className={styles.queryCreateInputPanel}>
                 <QuerySchemaNodeInput
                     queryArgs={args}
-                    nodeName={activeVizNode?.name ?? 'None'}
+                    nodeName={activeVizNode?.name ?? ''}
                     setInputs={setInputs}
                     initialInputs={{}}/>
             </div>

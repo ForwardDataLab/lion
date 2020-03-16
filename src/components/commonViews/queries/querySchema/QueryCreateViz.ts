@@ -156,7 +156,7 @@ export const createViz = (props: QueryVizProps) => {
             $svgContainer.attr("x", newCoordinate[0]);
             $svgContainer.attr('y', newCoordinate[1]);
             $container.attr('transform', `scale(${newScale.k})`)
-        }) as any);
+        }) as any).on("dblclick.zoom", null);
     const $linksWrapper = $container.append('g');
     const $nodesWrapper = $container.append('g');
     const diagonal = d3.linkHorizontal().x((d: any) => d.y).y((d: any) => d.x);
@@ -168,9 +168,11 @@ export const createViz = (props: QueryVizProps) => {
         const nodes = root.descendants();
         const links = root.links();
         tree(root);
-
+        console.log('root', root);
         const $nodes = $nodesWrapper.selectAll('g.nodes')
-            .data(nodes, (datum: any) => datum.data.data.name);
+            .data(nodes, (datum: any) => {
+                return datum.data.data.name;
+            });
         const $nodesEnter = $nodes.enter()
             .append('g')
             .attr('class', 'nodes')
@@ -181,7 +183,7 @@ export const createViz = (props: QueryVizProps) => {
                 const data = d.data;
                 if (d.children != null) {
                     props.onDeselectNode(data.data as VizNode);
-                    d.savedChildren = data.children;
+                    d.savedChildren = d.children;
                     d.children = null;
                     data.selected = false;
                 } else {
@@ -196,13 +198,14 @@ export const createViz = (props: QueryVizProps) => {
                     d.children = d.savedChildren;
                     d.savedChildren = null;
                 }
+                console.log('onClick', d);
                 update(d);
             });
         $nodesEnter.append('circle')
             .attr('class', 'node')
             .attr('r', '5px')
             .style('fill', (d: any) => {
-                if (d.data.selected) {
+                if (d.data.data.selected) {
                     return `#ed1250`;
                 } else {
                     return d.data.children != null ? `#0277bd` : `#90a4ae`;

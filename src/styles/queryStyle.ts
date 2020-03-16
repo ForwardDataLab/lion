@@ -18,11 +18,16 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         padding: theme.spacing(2),
-        backgroundColor: `rgba(236,239,241,0.8)`
+        backgroundColor: `rgba(236,239,241,0.8)`,
+        width: `100%`,
+        height: `100%`,
+        boxSizing: `border-box`,
+        borderTopLeftRadius: `10px`,
+        borderBottomLeftRadius: `10px`
     },
     sideInputTitle: {
         padding: 0,
-        margin: theme.spacing(1, 0),
+        margin: theme.spacing(1.5, 0),
         wordBreak: `break-word`
     },
     sideInputFields: {
@@ -37,13 +42,16 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
     },
     queryCreateWrapper: {
         width: `100%`,
+        height: `100%`,
         position: `relative`
     },
     queryCreateInputPanel: {
+        width: `240px`,
+        maxWidth:  `30%`,
         position: `absolute`,
         top: 0,
         bottom: 0,
-        display: `none`
+        overflow: `auto`
     },
     queryCreateVizPanel: {
         width: `100%`,

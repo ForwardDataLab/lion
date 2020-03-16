@@ -31,19 +31,26 @@ export function QuerySchemaNodeInput(props: QuerySchemaNodeInputProps) {
             };
             return <TextField
                 className={styles.sideInputFields}
-                value={inputs[name]}
+                value={inputs[name] == null ? '' : inputs[name]}
                 color={'secondary'}
                 key={name}
                 id="standard-basic"
-                label="Standard"
+                label={name}
                 onChange={onTypeInputs}
             />;
         });
     }
     return (
         <div className={styles.sideInputWrapper}>
-            <h2 className={styles.sideInputTitle}>Input fields for node {props.nodeName}</h2>
+            <h3 className={styles.sideInputTitle}>{
+                props.nodeName === '' ? 'No node selected' : `Input fields for node ${props.nodeName}`
+            }</h3>
             <div className={styles.sideFieldWrapper}>{allInputs}</div>
+            {
+                props.queryArgs != null && (
+                    <small>Note that values will be automatically saved</small>
+                )
+            }
         </div>
     );
 }

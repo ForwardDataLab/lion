@@ -55,7 +55,7 @@ function PrivateRoute({isAuthenticated, children, ...rest}: ExtendedRouteProps) 
 
 export function AuthorizedFront() {
     const [title, setTitle] = useState(routerEndpoints.queries.name);
-    const [isOpen, toggleMenuOpen] = useState(true);
+    const [isOpen, toggleMenuOpen] = useState(false);
     const {state} = useContext(globalStore);
     const styles = appStyles();
     const theme = useTheme();

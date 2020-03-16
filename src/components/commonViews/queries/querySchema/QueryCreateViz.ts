@@ -144,18 +144,19 @@ export const createViz = (props: QueryVizProps) => {
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", `0 0 ${width} ${height}`)
         .attr('id', svgID);
-    const $container = $svg.call(
-        d3.zoom().on("zoom", () => {
-            const newCoordinate = d3.event.transform.apply([width/2, height/2]);
-            const newScale = d3.event.transform.scale(1);
-            $container.attr("x", newCoordinate[0]);
-            $container.attr('y', newCoordinate[1]);
-            $container.attr('transform', `scale(${newScale.k})`)
-        }) as any)
-        .append('svg')
+    const $svgContainer = $svg.append('svg')
         .style('overflow', 'visible')
         .attr('x', width/2)
         .attr('y', height/2);
+    const $container = $svgContainer.append('g');
+    $svg.call(
+        d3.zoom().on("zoom", () => {
+            const newCoordinate = d3.event.transform.apply([width/2, height/2]);
+            const newScale = d3.event.transform.scale(1);
+            $svgContainer.attr("x", newCoordinate[0]);
+            $svgContainer.attr('y', newCoordinate[1]);
+            $container.attr('transform', `scale(${newScale.k})`)
+        }) as any);
     const $nodesWrapper = $container.append('g');
     const $linksWrapper = $container.append('g');
     const diagonal = d3.linkHorizontal().x((d: any) => d.y).y((d: any) => d.x);

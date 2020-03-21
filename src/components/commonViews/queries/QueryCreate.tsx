@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {QueryGeneral} from "../../../models/Query";
 import {JSONObject} from "../../../types/Json";
 import fakeSchema from "../../../data/fakeSchema2.json";
@@ -28,7 +28,7 @@ interface QueryCreateProps {
 }
 
 const fakeSources = ['Reddit', 'GitHub'];
-const allSchemas: {[source: string]: JSONObject} = {};
+const allSchemas: { [source: string]: JSONObject } = {};
 
 export function QueryCreate(props: QueryCreateProps) {
     // assumptions:
@@ -154,7 +154,10 @@ export function QueryCreate(props: QueryCreateProps) {
         }
         setActiveRecord(activeRecord => {
             const newRecord = {...activeRecord, inputs: newInputs} as SchemaSelectRecord;
-            setSelectedSchema(selectedSchema => replaceNodeinTree({...newRecord.vizNode, arguments: newRecord.inputs}, selectedSchema));
+            setSelectedSchema(selectedSchema => replaceNodeinTree({
+                ...newRecord.vizNode,
+                arguments: newRecord.inputs
+            }, selectedSchema));
             return newRecord;
         });
     }, [activeRecord]);

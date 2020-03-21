@@ -139,5 +139,32 @@ export const queryHistoryStyles = makeStyles((theme: Theme) => createStyles({
         alignSelf: `stretch`,
         margin: `4px`,
         border: `1px solid ${grey["100"]}`
+    },
+
+    detailPanelWrapper: {
+        width: `100%`,
+        boxSizing: `border-box`,
+        padding: theme.spacing(1),
+        display: `flex`,
+        flexDirection: `column`,
+        overflowY: `auto`
+    },
+    detailHelperText: {
+        padding: 0,
+        margin: theme.spacing(1, 0.5),
+        color: grey["400"],
+        fontSize: `0.8rem`
+    },
+    detailTable: {
+        flexShrink: 0,
+        paddingBottom: theme.spacing(1),
+        borderBottom: `1px solid ${grey["100"]}`,
+        marginBottom: theme.spacing(1),
+    },
+    detailVizOutline: {
+        width: `calc(100% - 3rem)`,
+        alignSelf: `stretch`,
+        margin: `1rem 1.5rem`,
+        border: `1px solid ${grey["100"]}`
     }
 }));

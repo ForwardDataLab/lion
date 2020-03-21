@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback} from "react";
 import {JSONObject} from "../../../../types/Json";
 import {queryHistoryStyles} from "../../../../styles/queryStyle";
 import {cleanUpResponseViz, createResponseViz} from "./QueryCreateResponseViz";

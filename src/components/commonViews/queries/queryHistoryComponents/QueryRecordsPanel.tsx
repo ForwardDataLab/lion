@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {QueryHistoryRecord} from "../../../../models/Query";
+import {QueryGeneral, QueryHistoryRecord} from "../../../../models/Query";
 import fakeData from "../../../../data/fakeResponse1.json";
 import {queryHistoryStyles} from "../../../../styles/queryStyle";
 import {QueryRecordsList} from "./QueryRecordsList";
@@ -23,34 +23,39 @@ const fakeRecords = [
         executionTimestamp: '2020-01-31 02:23:32',
         runtime: 1009,
         data: fakeData
-    },{
+    }, {
         executionTimestamp: '2020-01-31 02:23:25',
         runtime: 1182,
         data: fakeErrorData
-    },{
+    }, {
         executionTimestamp: '2020-01-31 02:21:22',
         runtime: 1576,
         data: fakeData
-    },{
+    }, {
         executionTimestamp: '2020-01-31 02:16:35',
         runtime: 453,
         data: fakeData
-    },{
+    }, {
         executionTimestamp: '2020-01-31 02:13:35',
         runtime: 222,
         data: fakeData
-    },{
+    }, {
         executionTimestamp: '2020-01-31 02:23:32',
         runtime: 1009,
         data: fakeData
-    },{
+    }, {
         executionTimestamp: '2020-01-31 02:23:32',
         runtime: 1009,
         data: fakeData
     },
 ];
 
-export function QueryRecordsPanel() {
+interface QueryRecordsPanelProps {
+    query: QueryGeneral
+}
+
+export function QueryRecordsPanel(props: QueryRecordsPanelProps) {
+    const {query} = props;
     const [allRecords, setAllRecords] = useState<QueryHistoryRecord[]>([]);
     const [activeRecordIndex, setActiveRecordIndex] = useState(-1);
     const styles = queryHistoryStyles();
@@ -59,7 +64,7 @@ export function QueryRecordsPanel() {
         (async () => {
             setAllRecords(fakeRecords);
         })();
-    }, []);
+    }, [query]);
     const data = activeRecordIndex >= 0 && activeRecordIndex < allRecords.length ?
         allRecords[activeRecordIndex].data : null;
     return (

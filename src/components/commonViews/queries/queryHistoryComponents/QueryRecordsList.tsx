@@ -1,12 +1,13 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React from "react";
 import {QueryHistoryRecord} from "../../../../models/Query";
-import {IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
+import {IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@material-ui/core";
 import ChevronRightOutlinedIcon from '@material-ui/icons/ChevronRightOutlined';
 import {queryHistoryStyles} from "../../../../styles/queryStyle";
 
 interface QueryRecordsListProps {
     records: QueryHistoryRecord[],
     activeRecordIndex: number,
+
     setActiveRecordIndex(index: number): void,
 }
 
@@ -22,9 +23,12 @@ export function QueryRecordsList(props: QueryRecordsListProps) {
                 <TableCell>{record.executionTimestamp}</TableCell>
                 <TableCell>{record.runtime}</TableCell>
                 <TableCell>
-                    <IconButton color={'secondary'} aria-label="show more data" component={"span"} onClick={() => setActiveRecordIndex(index)}>
-                        <ChevronRightOutlinedIcon/>
-                    </IconButton>
+                    <Tooltip title={"show more data"}>
+                        <IconButton color={'secondary'} aria-label="show more data" component={"span"}
+                                    onClick={() => setActiveRecordIndex(index)}>
+                            <ChevronRightOutlinedIcon/>
+                        </IconButton>
+                    </Tooltip>
                 </TableCell>
             </TableRow>
         )

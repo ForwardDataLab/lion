@@ -1,59 +1,106 @@
-import * as d3 from "d3";
 import {JSONObject} from "../../../../types/Json";
+import * as d3 from "d3";
+import {isTypeConsidered, VizNode, VizTypeMemoization} from "../queryCreateComponents/QueryCreateViz";
+import {findIndex, SchemaTree} from "../queryCreateComponents/SchemaTree";
 
-const MAX_CHILDREN_COUNT = 10;
-
-interface QueryCreateResponseVizProps {
-    data: JSONObject,
+interface QueryCreateDetailVizProps {
+    rawSchema: JSONObject,
+    selectedTree: SchemaTree,
     containerElem: HTMLElement
 }
 
-interface QueryResponseNode {
-    value: string,
-    children: QueryResponseNode[] | null
+interface StaticVizTreeNode {
+    data: VizNode,
+    isPreexisting: boolean,
+    selected: boolean,
+    children: StaticVizTreeNode[] | null,
 }
 
-function isObject(obj: any) {
-    // https://stackoverflow.com/questions/11182924/how-to-check-if-javascript-object-is-json
-    return obj !== undefined && obj !== null && obj.constructor == Object;
-}
-
-function createTree(obj: JSONObject): QueryResponseNode[] {
-    const result: QueryResponseNode[] = [];
-    for (const [key, value] of Object.entries(obj)) {
-        const node: QueryResponseNode = {value: key, children: null};
-        if (Array.isArray(value)) {
-            node.children = createTree({...value} as any);
-        } else if (isObject(value)) {
-            node.children = createTree(value as JSONObject);
-        } else {
-            node.value = `${key}: ${value}`;
+function createTree(currentObject: JSONObject, allTypes: VizTypeMemoization, existingNodes: SchemaTree, parentName: string | null, parentBaseObjectName: string | null): StaticVizTreeNode {
+    const selected = false;
+    if (currentObject.hasOwnProperty('fields')) {
+        // a base object
+        const name = currentObject.name as string;
+        const children = [];
+        for (const item of currentObject.fields as JSONObject[]) {
+            children.push(createTree(item, allTypes, existingNodes, name, name));
         }
-        result.push(node);
+        const node = {
+            parentBaseObjectName,
+            parentName,
+            baseObjectName: name,
+            name
+        };
+        return {
+            data: node,
+            isPreexisting: findIndex(node, existingNodes) >= 0,
+            selected,
+            children
+        };
+    } else {
+        // a field object
+        const type = currentObject.type as JSONObject;
+        const hasChildren = type.name == null;
+        const baseObjectName = parentName as string;
+        const name = currentObject.name as string;
+        if (!hasChildren) {
+            const node = {
+                parentBaseObjectName,
+                parentName,
+                baseObjectName,
+                name
+            };
+            return {
+                data: node,
+                isPreexisting: findIndex(node, existingNodes) >= 0,
+                selected,
+                children: null
+            };
+        } else {
+            const newBaseObject = allTypes[(type.ofType as JSONObject).name as string];
+            const node = {
+                parentBaseObjectName,
+                parentName,
+                baseObjectName,
+                name
+            };
+            return {
+                data: node,
+                isPreexisting: findIndex(node, existingNodes) >= 0,
+                selected,
+                children: [createTree(newBaseObject, allTypes, existingNodes, name, parentBaseObjectName)],
+            };
+        }
     }
-    return result;
 }
 
-let previousData: any = null;
+let cachedRawSchema: any = null;
 
-export const cleanUpResponseViz = () => {
-    previousData = null
-};
+export const cleanUpDetailViz = () => cachedRawSchema = null;
 
-// todo: add pagination
-export const createResponseViz = (props: QueryCreateResponseVizProps) => {
-    const {data, containerElem} = props;
-    if (data === previousData) {
+// todo: merge this function with the original create function
+export const createDetailViz = (props: QueryCreateDetailVizProps) => {
+    if (props.rawSchema === cachedRawSchema) {
         return;
-    } else {
-        previousData = data;
     }
+    cachedRawSchema = props.rawSchema;
+    const schema = (props.rawSchema.data as JSONObject).__schema as JSONObject;
+    const startingString = (schema.queryType as JSONObject).name as string;
+    const allTypeObjects: VizTypeMemoization = (schema.types as JSONObject[]).reduce((acc: VizTypeMemoization, item) => {
+        const name = item.name as string;
+        if (isTypeConsidered(name)) {
+            acc[name] = item;
+        }
+        return acc
+    }, {});
+    if (!allTypeObjects.hasOwnProperty(startingString)) {
+        throw new Error('Starting query name does not exist');
+    }
+
     const width = 900;
     const height = 500;
     const tree = d3.tree().nodeSize([30, 300]);
-    // assume that there is only one root node called "data"
-    const cleanedData = {'Query Result': data['data'] as JSONObject};
-    const rootData = createTree(cleanedData)[0];
+    const rootData = createTree(allTypeObjects[startingString], allTypeObjects, props.selectedTree, null, null);
     // calculate all locations prehand
     const root = d3.hierarchy(rootData);
     (root as any).x0 = height / 2;
@@ -61,9 +108,8 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
     root.descendants().forEach((item: any) => {
         item.savedChildren = item.children;
         item.children = null;
-        item.selected = false;
     });
-    const $svg = d3.select(containerElem)
+    const $svg = d3.select(props.containerElem)
         .append('svg')
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", `0 0 ${width} ${height}`);
@@ -87,7 +133,11 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
         .duration(200)
         .attr("viewBox", `0, 0, ${width}, ${height}`);
     const circleFillCallback = (d: any) => {
-        return d.data.children != null ? `#0277bd` : `#90a4ae`;
+        if (d.data.isPreexisting) {
+            return `#ed1250`;
+        } else {
+            return d.data.children != null ? `#0277bd` : `#90a4ae`;
+        }
     };
 
     function update(source: any) {
@@ -95,7 +145,9 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
         const links = root.links();
         tree(root);
         const $nodes = $nodesWrapper.selectAll('g.nodes')
-            .data(nodes);
+            .data(nodes, (datum: any) => {
+                return datum.data.data.name;
+            });
         const $nodesEnter = $nodes.enter()
             .append('g')
             .attr('class', 'nodes')
@@ -106,9 +158,11 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
                 const data = d.data;
                 data.selected = !data.selected;
                 if (!data.selected) {
+                    d.savedChildren = d.children;
                     d.children = null;
                 } else {
                     d.children = d.savedChildren;
+                    d.savedChildren = null;
                 }
                 update(d);
             });
@@ -121,7 +175,7 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
             .attr("dy", "0.31em")
             .attr("x", (d: any) => d.data.children != null ? -10 : 10)
             .attr("text-anchor", (d: any) => d.data.children != null ? "end" : "start")
-            .text((d: any) => d.data.value)
+            .text((d: any) => d.data.data.name)
             .clone(true).lower()
             .attr("stroke-linejoin", "round")
             .attr("stroke-width", 5)
@@ -139,7 +193,7 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
             .attr("stroke-opacity", 0);
 
         const $links = $linksWrapper.selectAll("path")
-            .data(links);
+            .data(links, (d: any) => d.target.data.data.name);
         const $linksEnter = $links.enter()
             .append('path')
             .attr("fill", "none")

@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 
 const builtInTypes = new Set(['String', 'Int', 'Float', 'Boolean', 'ID']);
 
-function isTypeConsidered(name: string) {
+export function isTypeConsidered(name: string) {
     if (name.startsWith('__')) {
         return false;
     }
@@ -97,13 +97,13 @@ export interface VizNode {
     name: string
 }
 
-interface VizTreeNode {
+export interface VizTreeNode {
     data: VizNode,
     selected: boolean,
     children: VizTreeNode[] | null,
 }
 
-interface VizTypeMemoization {
+export interface VizTypeMemoization {
     [index: string]: JSONObject;
 }
 

@@ -13,13 +13,18 @@ export function addNodeToTree(node: VizNodeExtended, tree: SchemaTree) {
     const newTree = {...tree};
     if (!newTree.hasOwnProperty(node.baseObjectName)) {
         newTree[node.baseObjectName] = [node];
+        return newTree;
     } else {
-        newTree[node.baseObjectName].push(node);
+        if (findIndex(node, tree) >= 0) {
+            return tree
+        } else {
+            newTree[node.baseObjectName].push(node);
+            return newTree;
+        }
     }
-    return newTree;
 }
 
-function findIndex(node: VizNode | VizNodeExtended, tree: SchemaTree) {
+export function findIndex(node: VizNode | VizNodeExtended, tree: SchemaTree) {
     if (!tree.hasOwnProperty(node.baseObjectName)) {
         return -1;
     }

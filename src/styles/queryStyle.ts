@@ -1,6 +1,6 @@
-import {makeStyles, Theme} from "@material-ui/core/styles";
+import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {commonButtonStyles, commonPageStyles, errorButtonStyles, formStyles} from "./commonStyles";
-import {grey} from "@material-ui/core/colors";
+import {grey, red} from "@material-ui/core/colors";
 
 export const queryStyles = makeStyles((theme: Theme) => ({
     ...commonPageStyles(theme),
@@ -62,5 +62,82 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
     },
     formSubmitSpacing: {
         marginTop: theme.spacing(4)
+    }
+}));
+
+
+export const queryHistoryStyles = makeStyles((theme: Theme) => createStyles({
+    ...commonPageStyles(theme),
+    ...errorButtonStyles(theme),
+    ...commonButtonStyles(theme),
+    ...formStyles(theme),
+    historyWrapper: {
+        width: `100%`,
+        maxHeight: `calc(100vh - 70px - 2.5rem - 32px - 32px - 10px)`, // appbar - title - top padding - bottom padding - extra spacing
+        display: `flex`,
+        flexDirection: `column`
+    },
+    tabsWrapper: {
+        padding: `1rem`,
+        borderBottom: `1px solid #F5F5F5`
+    },
+    tabPanelWrapper: {
+        height: `100%`,
+        display: `flex`,
+        flexDirection: `column`,
+        overflowY: `hidden`
+    },
+    intermediateWrapper: {
+        height: `100%`,
+        display: `flex`,
+        flexDirection: `column`,
+        overflowY: `hidden`
+    },
+    historyPanelWrapper: {
+        height: `100%`,
+        width: `100%`,
+        display: `flex`,
+        flexDirection: `row`,
+        overflowY: `hidden`
+    },
+    historyTableWrapper: {
+        width: `30vw`,
+        overflowY: `auto`,
+        flexShrink: 0
+    },
+    historyTable: {
+        borderRight: `1px solid ${grey["100"]}`
+    },
+    historyTableHighlightedRow: {
+        backgroundColor: grey["100"]
+    },
+
+    responseVizWrapper: {
+        width: `100%`,
+        alignSelf: `stretch`,
+        display: `flex`,
+        flexDirection: `column`,
+        alignItems: `center`,
+        justifyContent: `center`,
+    },
+    responseVizTextWrapper: {
+        display: `flex`,
+        flexDirection: `column`,
+        alignItems: `center`,
+        justifyContent: `center`,
+        width: `100%`,
+        height: `100%`
+    },
+    responseVizEmptyTitle: {
+        color: grey["400"],
+    },
+    responseVizErrorTitle: {
+        color: red["400"],
+    },
+    responseVizOutline: {
+        width: `calc(100% - 4px - 4px)`,
+        alignSelf: `stretch`,
+        margin: `4px`,
+        border: `1px solid ${grey["100"]}`
     }
 }));

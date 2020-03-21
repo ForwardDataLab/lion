@@ -9,26 +9,14 @@ export enum QuerySchedule {
     PER_MONTH = 'Once a month'
 }
 
-export type QueryData = JSONObject;
-
-export interface QueryRecord {
-    executionTime: string,
+export interface QueryHistoryRecord {
+    executionTimestamp: string,
     runtime: number,
-    data: QueryData
+    data: JSONObject
 }
 
 export interface QueryGeneral {
     name: string,
     source: string,
     schedule: QuerySchedule,
-}
-
-export interface QueryHistory {
-    name: string,
-    records: QueryRecord[],
-}
-
-export interface QuerySchema {
-    name: string,
-    schema: JSONObject,
 }

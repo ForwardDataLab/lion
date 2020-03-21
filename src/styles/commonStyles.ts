@@ -4,7 +4,8 @@ import {blueGrey} from "@material-ui/core/colors";
 export const commonPageStyles = (theme: Theme) => createStyles({
     titleStyle: {
         margin: theme.spacing(0, 0, 2, 0),
-        color: '#212121'
+        color: '#212121',
+        height: `2.5rem`
     },
     helperTextStyle: {
         display: 'block',

@@ -9,6 +9,7 @@ import {useParams} from "react-router-dom";
 import {QueryHistory} from "./queries/QueryHistory";
 import {SnackBarTransition} from "../utils/commonComponents";
 import {QueryCreate} from "./queries/QueryCreate";
+import {Redirect} from "react-router-dom";
 
 export enum QueryRouteType {
     LIST, NEW, HISTORY
@@ -49,7 +50,7 @@ const fakeQueries: QueryGeneral[] = [
 export function QueryManagement(props: QueryProps) {
     const {updateTitle} = props;
     // const {state} = useContext(globalStore);
-    const paramName = useParams<ServerRouteParams>()[routerEndpoints.queries.history.paramName];
+    const selectedQueryName = useParams<ServerRouteParams>()[routerEndpoints.queries.history.paramName];
     const [queries, setQueries] = useState([] as QueryGeneral[]);
     const [alertMessage, setAlertMessage] = useState('');
 
@@ -105,12 +106,20 @@ export function QueryManagement(props: QueryProps) {
             break;
         }
         case QueryRouteType.NEW: {
-            child = null;
             child = <QueryCreate addQuery={onPerformAdd}/>;
             break;
         }
         case QueryRouteType.HISTORY: {
-            child = <QueryHistory/>;
+            if (queries.length === 0) {
+                child = null;
+            } else {
+                const index = queries.findIndex(q => q.name === selectedQueryName);
+                if (index < 0) {
+                    child = <Redirect to={routerEndpoints.invalid.url}/>
+                }
+                const query = queries[index];
+                child = <QueryHistory query={query}/>;
+            }
             break;
         }
         default:

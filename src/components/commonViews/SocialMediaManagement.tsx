@@ -3,7 +3,7 @@ import {globalStore} from "../../store/globalState";
 import {SocialMediaSource} from "../../models/SocialMediaSource";
 import {socialMediaStyles} from "../../styles/socialMediaStyle";
 import {Button, List, ListItem, ListItemText} from "@material-ui/core";
-import {ViewCommonProps} from "../../types/ViewProps";
+import {ViewCommonProps} from "../../types/props/ViewProps";
 import {routerEndpoints} from "../endpoints/routerEndpoints";
 
 interface SocialMediaProps extends ViewCommonProps {

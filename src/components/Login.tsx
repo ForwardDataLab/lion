@@ -1,30 +1,11 @@
 import React, {useContext, useState} from "react";
 import Axios from "axios";
 import {Button, Container, Paper, TextField} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
 import {globalStore, SET_USER} from "../store/globalState";
+import {loginStyles} from "../styles/loginStyle";
+import {LoginRequest} from "../types/requests/loginRequest";
 
 const whiteSpaceRegex = /^\s*$/;
-
-const loginStyles = makeStyles({
-    paper: {
-        padding: '2rem'
-    },
-    title: {
-        color: '#212121',
-        margin: '0 0 2rem 0'
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    fieldSeparation: {
-        marginBottom: '1rem'
-    },
-    functionalitySeparation: {
-        marginBottom: '2rem'
-    }
-});
 
 export function Login() {
     const [username, setUserName] = useState('');
@@ -56,7 +37,7 @@ export function Login() {
                     data: {
                         name: username,
                         password: password
-                    }
+                    } as LoginRequest
                 });
                 const data = response.data;
                 const status = response.status;

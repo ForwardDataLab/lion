@@ -11,7 +11,7 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 import clsx from "clsx";
 import {Server} from "../../../models/Server";
-import {ServerListDetailPanelProps, ServerListOption, ServerListProps} from "../../../types/ServerProps";
+import {ServerListDetailPanelProps, ServerListOption, ServerListProps} from "../../../types/props/ServerProps";
 import {materialTableIcons} from "../../utils/commonComponents";
 
 

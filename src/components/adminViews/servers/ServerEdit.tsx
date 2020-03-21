@@ -7,7 +7,7 @@ import clsx from "clsx";
 import {Redirect} from 'react-router-dom';
 import {routerEndpoints} from "../../endpoints/routerEndpoints";
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
-import {ServerCreateProps, ServerEditOption, ServerEditProps} from "../../../types/ServerProps";
+import {ServerCreateProps, ServerEditOption, ServerEditProps} from "../../../types/props/ServerProps";
 import {isBlank} from "../../utils/commonMethods";
 
 

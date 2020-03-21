@@ -16,7 +16,7 @@ import clsx from "clsx";
 import {Explore, Help, Menu, People, Search, Share, Web} from "@material-ui/icons";
 import {BrowserRouter as Router, NavLink, Redirect, Route, Switch} from "react-router-dom";
 import {routerEndpoints} from "./endpoints/routerEndpoints";
-import {QueryManagement, QueryRouteType} from "./commonViews/queries/QueryManagement";
+import {QueryManagement, QueryRouteType} from "./commonViews/QueryManagement";
 import {SocialMediaManagement} from "./commonViews/SocialMediaManagement";
 import {ApplicationsManagement} from "./commonViews/ApplicationsManagement";
 import React, {useContext, useState} from "react";
@@ -26,7 +26,7 @@ import {ServerManagement} from "./adminViews/servers/ServerManagement";
 import {UserManagement} from "./adminViews/UserManagement";
 import {globalStore} from "../store/globalState";
 import {NotFoundPage} from "./commonViews/NotFoundPage";
-import {ServerRouteType} from "../types/ServerProps";
+import {ServerRouteType} from "../types/props/ServerProps";
 
 interface ExtendedRouteProps extends RouteProps {
     isAuthenticated: boolean

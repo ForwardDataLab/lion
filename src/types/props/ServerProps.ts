@@ -1,4 +1,4 @@
-import {Server} from "../models/Server";
+import {Server} from "../../models/Server";
 import {ViewCommonProps} from "./ViewProps";
 
 export enum ServerUpdateType {

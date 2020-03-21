@@ -3,10 +3,16 @@ import {queryCreateStyles} from "../../../../styles/queryStyle";
 import {TextField} from "@material-ui/core";
 import {JSONObject} from "../../../../types/Json";
 
+export interface QueryFieldInputs {
+    [name: string]: any
+}
+
+
 interface QuerySchemaNodeInputProps {
     queryArgs: JSONObject[] | null,
     nodeName: string,
-    initialInputs: any,
+    initialInputs: QueryFieldInputs,
+
     setInputs(newInputs: any): void;
 }
 

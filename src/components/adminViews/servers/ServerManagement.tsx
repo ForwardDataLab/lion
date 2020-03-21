@@ -6,7 +6,7 @@ import {
     ServerUpdateRequest,
     ServerUpdateResult,
     ServerUpdateType
-} from "../../../types/ServerProps";
+} from "../../../types/props/ServerProps";
 import {ServerList} from "./ServerList";
 import {ServerEdit} from "./ServerEdit";
 import {routerEndpoints} from "../../endpoints/routerEndpoints";

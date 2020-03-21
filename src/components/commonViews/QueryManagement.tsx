@@ -1,14 +1,14 @@
 import React, {ReactNode, useEffect, useState} from "react";
-import {ViewCommonProps} from "../../../types/ViewProps";
-import {QueryGeneral, QuerySchedule} from "../../../models/Query";
-import {routerEndpoints} from "../../endpoints/routerEndpoints";
-import {ServerRouteParams} from "../../../types/ServerProps";
+import {ViewCommonProps} from "../../types/props/ViewProps";
+import {QueryGeneral, QuerySchedule} from "../../models/Query";
+import {routerEndpoints} from "../endpoints/routerEndpoints";
+import {ServerRouteParams} from "../../types/props/ServerProps";
 import {Button, Snackbar} from "@material-ui/core";
-import {QueryList} from "./QueryList";
+import {QueryList} from "./queries/QueryList";
 import {useParams} from "react-router-dom";
-import {QueryHistory} from "./QueryHistory";
-import {SnackBarTransition} from "../../utils/commonComponents";
-import {QueryCreate} from "./QueryCreate";
+import {QueryHistory} from "./queries/QueryHistory";
+import {SnackBarTransition} from "../utils/commonComponents";
+import {QueryCreate} from "./queries/QueryCreate";
 
 export enum QueryRouteType {
     LIST, NEW, HISTORY

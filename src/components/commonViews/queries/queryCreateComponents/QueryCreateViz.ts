@@ -29,17 +29,18 @@ export function findNode(schema: JSONObject | JSONObject[], currentName: string)
     return null;
 }
 
-function createTree(currentObject: JSONObject, allTypes: VizTypeMemoization, parentName: string | null): VizTreeNode {
+function createTree(currentObject: JSONObject, allTypes: VizTypeMemoization, parentName: string | null, parentBaseObjectName: string | null): VizTreeNode {
     const selected = false;
     if (currentObject.hasOwnProperty('fields')) {
         // a base object
         const name = currentObject.name as string;
         const children = [];
         for (const item of currentObject.fields as JSONObject[]) {
-            children.push(createTree(item, allTypes, name));
+            children.push(createTree(item, allTypes, name, name));
         }
         return {
             data: {
+                parentBaseObjectName,
                 parentName,
                 baseObjectName: name,
                 name
@@ -56,9 +57,10 @@ function createTree(currentObject: JSONObject, allTypes: VizTypeMemoization, par
         if (!hasChildren) {
             return {
                 data: {
-                    parentName: parentName as string,
-                        baseObjectName,
-                        name
+                    parentBaseObjectName,
+                    parentName,
+                    baseObjectName,
+                    name
                 },
                 selected,
                 children: null
@@ -67,12 +69,13 @@ function createTree(currentObject: JSONObject, allTypes: VizTypeMemoization, par
             const newBaseObject = allTypes[(type.ofType as JSONObject).name as string];
             return {
                 data: {
-                    parentName: parentName as string,
+                    parentBaseObjectName,
+                    parentName,
                     baseObjectName,
                     name
                 },
                 selected,
-                children: [createTree(newBaseObject, allTypes, name)],
+                children: [createTree(newBaseObject, allTypes, name, parentBaseObjectName)],
             };
         }
     }
@@ -88,6 +91,7 @@ interface QueryVizProps {
 }
 
 export interface VizNode {
+    parentBaseObjectName: string | null,
     parentName: string | null,
     baseObjectName: string,
     name: string
@@ -105,7 +109,11 @@ interface VizTypeMemoization {
 
 
 const svgID = `query-create-viz`;
-let cachedRawSchema = {};
+let cachedRawSchema: any = {};
+
+export const cleanUpViz = () => {
+    cachedRawSchema = null;
+};
 
 /**
  * Source: https://observablehq.com/@d3/collapsible-tree
@@ -131,10 +139,10 @@ export const createViz = (props: QueryVizProps) => {
     const width = 900;
     const height = 500;
     const tree = d3.tree().nodeSize([30, 300]);
-    const rootData = createTree(allTypeObjects[startingString], allTypeObjects, null);
+    const rootData = createTree(allTypeObjects[startingString], allTypeObjects, null, null);
     // calculate all locations prehand
     const root = d3.hierarchy(rootData);
-    (root as any).x0 = height/2;
+    (root as any).x0 = height / 2;
     (root as any).y0 = 0;
     root.descendants().forEach((item: any) => {
         item.savedChildren = item.children;
@@ -147,12 +155,12 @@ export const createViz = (props: QueryVizProps) => {
         .attr('id', svgID);
     const $svgContainer = $svg.append('svg')
         .style('overflow', 'visible')
-        .attr('x', width/2)
-        .attr('y', height/2);
+        .attr('x', width / 2)
+        .attr('y', height / 2);
     const $container = $svgContainer.append('g');
     $svg.call(
         d3.zoom().on("zoom", () => {
-            const newCoordinate = d3.event.transform.apply([width/2, height/2]);
+            const newCoordinate = d3.event.transform.apply([width / 2, height / 2]);
             const newScale = d3.event.transform.scale(1);
             $svgContainer.attr("x", newCoordinate[0]);
             $svgContainer.attr('y', newCoordinate[1]);
@@ -185,7 +193,7 @@ export const createViz = (props: QueryVizProps) => {
             .attr('class', 'nodes')
             .attr("transform", (d: any) => `translate(${source.y0},${source.x0})`)
             .attr("cursor", "pointer")
-            .on('click', function clickCallback (d: any) {
+            .on('click', function clickCallback(d: any) {
                 d3.event.stopPropagation();
                 const data = d.data;
                 data.selected = !data.selected;
@@ -236,7 +244,7 @@ export const createViz = (props: QueryVizProps) => {
             .attr("stroke-opacity", 0);
 
         const $links = $linksWrapper.selectAll("path")
-                .data(links, (d: any) => d.target.data.data.name);
+            .data(links, (d: any) => d.target.data.data.name);
         const $linksEnter = $links.enter()
             .append('path')
             .attr("fill", "none")

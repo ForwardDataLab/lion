@@ -55,7 +55,6 @@ export const cleanUpResponseViz = () => {
     previousData = null
 };
 
-// todo: add pagination
 export const createResponseViz = (props: QueryCreateResponseVizProps) => {
     const {data, containerElem} = props;
     if (data === previousData) {

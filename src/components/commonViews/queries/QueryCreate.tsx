@@ -21,8 +21,6 @@ import {
 import {QueryFieldInputs} from "./queryCreateComponents/QuerySchemaNodeInput";
 
 
-// todo: query request structure is not reasonable, may be more efficient, but need rework at the backend
-
 interface QueryCreateProps {
     addQuery(query: QueryGeneral): void;
 }
@@ -73,11 +71,9 @@ export function QueryCreate(props: QueryCreateProps) {
         } else {
             setFormErrorMessages(formErrorMessages => ({...formErrorMessages, source: null}));
         }
-        // todo: add server-side verification here
         return isFormValid
     }, [validateFormAttribute]);
     const validateSchema = useCallback(() => {
-        // todo: add server-side verification
         return selectedSchema != null;
     }, [selectedSchema]);
     const onValidateSchema = useCallback(() => {
@@ -95,7 +91,6 @@ export function QueryCreate(props: QueryCreateProps) {
             return
         }
         console.log('Saved Data', selectedSchema);
-        // todo: submit save request here
         addQuery(queryForm);
     }, [onValidateSchema, onValidateForm, addQuery, queryForm, selectedSchema]);
     const onCloseSnackBar = useCallback(() => {
@@ -116,8 +111,8 @@ export function QueryCreate(props: QueryCreateProps) {
                     setFullSchema(fakeSchema);
                 })();
             }
-            setQueryForm(newQueryForm);
         }
+        setQueryForm(newQueryForm);
     }, []);
     const onNodeSelected = useCallback((vizNode: VizNode, rawNode: JSONObject) => {
         setActiveRecord(activeRecord => {

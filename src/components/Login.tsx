@@ -3,7 +3,7 @@ import Axios from "axios";
 import {Button, Container, Paper, TextField} from "@material-ui/core";
 import {globalStore, SET_USER} from "../store/globalState";
 import {loginStyles} from "../styles/loginStyle";
-import {LoginRequest} from "../types/requests/loginRequest";
+import {LoginRequest} from "../types/requests/loginRequests";
 
 const whiteSpaceRegex = /^\s*$/;
 

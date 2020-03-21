@@ -18,7 +18,6 @@ interface QuerySchemaVizProps {
 }
 
 export function QuerySchemaViz(props: QuerySchemaVizProps) {
-    // todo: all props should be memoized by parent
     const {
         rawSchema, lastActiveRawNode, inputs,
         setActiveNode, setInputs, deleteVizNode

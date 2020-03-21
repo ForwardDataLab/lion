@@ -3,8 +3,6 @@ import {
     ServerProps,
     ServerRouteParams,
     ServerRouteType,
-    ServerUpdateRequest,
-    ServerUpdateResult,
     ServerUpdateType
 } from "../../../types/props/ServerProps";
 import {ServerList} from "./ServerList";
@@ -14,6 +12,8 @@ import {useParams} from "react-router-dom";
 import {Button, Snackbar} from "@material-ui/core";
 import {Server} from "../../../models/Server";
 import {SnackBarTransition} from "../../utils/commonComponents";
+import {ServerUpdateRequest} from "../../../types/requests/serverRequests";
+import {ServerUpdateResponse} from "../../../types/responses/serverResponses";
 
 const fakeServers: Server[] = [
     {
@@ -48,12 +48,12 @@ export function ServerManagement(props: ServerProps) {
     }, [setServers]);
     const onUpdateServers = async (request: ServerUpdateRequest) => {
         // todo: make http requests
-        const result: ServerUpdateResult = {
-            isSuccess: true,
-            errorMessage: null
+        const result: ServerUpdateResponse = {
+            data: [],
+            errors: []
         };
         // todo: can fetch brand new data from server
-        if (result.isSuccess) {
+        if (result.errors.length === 0) {
             const newServers: Server[] = servers.slice(0);
             switch (request.type) {
                 case ServerUpdateType.UPDATE: {
@@ -82,7 +82,7 @@ export function ServerManagement(props: ServerProps) {
             setServers(newServers);
             setAlertMessage('Update servers successful');
         } else {
-            setAlertMessage('Error: ' + result.errorMessage ?? 'Fail to modify servers');
+            setAlertMessage('Error: ' + (result.errors.length > 0 ? result.errors.join(';') : 'Fail to modify servers'));
         }
     };
     const onPerformUpdate = (server: Server) => onUpdateServers({data: server, type: ServerUpdateType.UPDATE});

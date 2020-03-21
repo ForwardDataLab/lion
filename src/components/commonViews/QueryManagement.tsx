@@ -9,23 +9,11 @@ import {Redirect, useHistory, useParams} from "react-router-dom";
 import {QueryHistory} from "./queries/QueryHistory";
 import {SnackBarTransition} from "../utils/commonComponents";
 import {QueryCreate} from "./queries/QueryCreate";
+import {QueryUpdateRequest, QueryUpdateType} from "../../types/requests/queryRequests";
+import {QueryUpdateResponse} from "../../types/responses/queryResponses";
 
 export enum QueryRouteType {
     LIST, NEW, HISTORY
-}
-
-enum QueryUpdateType {
-    ADD, DELETE, UPDATE
-}
-
-interface QueryUpdateRequest {
-    type: QueryUpdateType,
-    data: QueryGeneral,
-}
-
-interface QueryUpdateResult {
-    isSuccess: boolean,
-    errorMessage: null | string,
 }
 
 interface QueryProps extends ViewCommonProps {
@@ -43,8 +31,6 @@ const fakeQueries: QueryGeneral[] = [
         schedule: QuerySchedule.PER_DAY
     }
 ];
-
-// todo: spreadsheet like; nested lists
 
 export function QueryManagement(props: QueryProps) {
     const {updateTitle} = props;
@@ -64,12 +50,12 @@ export function QueryManagement(props: QueryProps) {
 
     const onUpdateQueries = async (request: QueryUpdateRequest) => {
         // todo: make http requests
-        const result: QueryUpdateResult = {
-            isSuccess: true,
-            errorMessage: null
+        const result: QueryUpdateResponse = {
+            data: null,
+            errors: []
         };
         // todo: can fetch brand new data from server
-        if (result.isSuccess) {
+        if (result.errors.length === 0) {
             setQueries((queries: QueryGeneral[]) => {
                 const newQueries: QueryGeneral[] = queries.slice(0);
                 switch (request.type) {
@@ -95,7 +81,7 @@ export function QueryManagement(props: QueryProps) {
                 return newQueries;
             });
         } else {
-            setAlertMessage('Error: ' + result.errorMessage ?? 'Fail to modify servers');
+            setAlertMessage('Error: ' + (result.errors.length > 0 ? result.errors.join(';') : 'Fail to modify queries'));
         }
     };
 

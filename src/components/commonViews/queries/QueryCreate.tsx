@@ -120,17 +120,19 @@ export function QueryCreate(props: QueryCreateProps) {
         }
     }, []);
     const onNodeSelected = useCallback((vizNode: VizNode, rawNode: JSONObject) => {
-        if (activeRecord != null) {
-            setNodesHistory(nodesHistory => addRecordToHistory(activeRecord, nodesHistory));
-        }
-        const newRecord = {
-            vizNode: vizNode,
-            rawNode: rawNode,
-            inputs: {}
-        };
-        setActiveRecord(newRecord);
-        setSelectedSchema(selectedSchema => addNodeToTree({...vizNode, arguments: null}, selectedSchema));
-    }, [activeRecord]);
+        setActiveRecord(activeRecord => {
+            if (activeRecord != null) {
+                setNodesHistory(nodesHistory => addRecordToHistory(activeRecord, nodesHistory));
+            }
+            const newRecord = {
+                vizNode: vizNode,
+                rawNode: rawNode,
+                inputs: {}
+            };
+            setSelectedSchema(selectedSchema => addNodeToTree({...vizNode, arguments: null}, selectedSchema));
+            return newRecord
+        });
+    }, []);
 
     const onNodeDeselected = useCallback((vizNode: VizNode) => {
         setSelectedSchema(selectedSchema => removeNodeFromTree(vizNode, selectedSchema));

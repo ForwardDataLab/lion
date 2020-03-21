@@ -11,7 +11,10 @@ export interface SchemaSelectRecord {
 export type SchemaHistory = ReadonlyArray<SchemaSelectRecord>;
 
 export function addRecordToHistory(record: SchemaSelectRecord, history: SchemaHistory): SchemaHistory {
-    return [...history, record];
+    if (findIndex(record.vizNode, history) < 0) {
+        return [...history, record];
+    }
+    return history;
 }
 
 function findIndex(node: VizNode, history: SchemaHistory) {
@@ -23,7 +26,7 @@ function findIndex(node: VizNode, history: SchemaHistory) {
 export function removeRecordsInHistory(startingNode: VizNode, history: SchemaHistory): SchemaHistory | null {
     const index = findIndex(startingNode, history);
     if (index < 0) {
-        return null;
+        return history;
     }
     return history.slice(0, index);
 }

@@ -197,7 +197,7 @@ export const createViz = (props: QueryVizProps) => {
                 d3.event.stopPropagation();
                 const data = d.data;
                 data.selected = !data.selected;
-                if (d.children != null) {
+                if (!data.selected) {
                     props.onDeselectNode(data.data as VizNode);
                     d.savedChildren = d.children;
                     d.children = null;

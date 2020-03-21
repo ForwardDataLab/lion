@@ -9,25 +9,40 @@ interface QueryCreateResponseVizProps {
 }
 
 interface QueryResponseNode {
+    isHandle: boolean,
     value: string,
     children: QueryResponseNode[] | null
 }
 
 function isObject(obj: any) {
     // https://stackoverflow.com/questions/11182924/how-to-check-if-javascript-object-is-json
-    return obj !== undefined && obj !== null && obj.constructor == Object;
+    return obj !== undefined && obj !== null && obj.constructor === Object;
 }
+
+const PREVIOUS_HANDLE_TOKEN = `Previous page`;
+const NEXT_HANDLE_TOKEN = `Next page`;
 
 function createTree(obj: JSONObject): QueryResponseNode[] {
     const result: QueryResponseNode[] = [];
     for (const [key, value] of Object.entries(obj)) {
-        const node: QueryResponseNode = {value: key, children: null};
+        const node: QueryResponseNode = {value: key, children: null, isHandle: false};
         if (Array.isArray(value)) {
-            node.children = createTree({...value} as any);
+            node.children = createTree(value.reduce((acc: any, cur: any, i) => {
+                acc[i+1] = cur;
+                return acc;
+            }, {}) as JSONObject);
         } else if (isObject(value)) {
             node.children = createTree(value as JSONObject);
         } else {
             node.value = `${key}: ${value}`;
+        }
+        if (node.children != null && node.children.length > MAX_CHILDREN_COUNT) {
+            const childrenSize = node.children.length;
+            node.children = [
+                {value: `${PREVIOUS_HANDLE_TOKEN} (total ${childrenSize} items)`, children: null, isHandle: true},
+                ...node.children,
+                {value: `${NEXT_HANDLE_TOKEN} (total ${childrenSize} items)`, children: null, isHandle: true},
+            ]
         }
         result.push(node);
     }
@@ -58,10 +73,14 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
     const root = d3.hierarchy(rootData);
     (root as any).x0 = height / 2;
     (root as any).y0 = 0;
-    root.descendants().forEach((item: any) => {
+    root.descendants().forEach((item: any, index) => {
+        // todo: remove those dynamically added attributes
+        item.id = index;
         item.savedChildren = item.children;
         item.children = null;
         item.selected = false;
+        item.pageIndex = 0;
+        item.isPaginationNeeded = item.savedChildren ? item.savedChildren.length > MAX_CHILDREN_COUNT : false;
     });
     const $svg = d3.select(containerElem)
         .append('svg')
@@ -87,6 +106,9 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
         .duration(200)
         .attr("viewBox", `0, 0, ${width}, ${height}`);
     const circleFillCallback = (d: any) => {
+        if (d.data.isHandle) {
+            return `#4caf50`;
+        }
         return d.data.children != null ? `#0277bd` : `#90a4ae`;
     };
 
@@ -95,7 +117,7 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
         const links = root.links();
         tree(root);
         const $nodes = $nodesWrapper.selectAll('g.nodes')
-            .data(nodes);
+            .data(nodes, (item: any) => item.id);
         const $nodesEnter = $nodes.enter()
             .append('g')
             .attr('class', 'nodes')
@@ -103,12 +125,38 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
             .attr("cursor", "pointer")
             .on('click', function clickCallback(d: any) {
                 d3.event.stopPropagation();
+                const switchChildren = (d: any) => {
+                    const rawNodes = d.savedChildren.slice(1, -1);
+                    const index = d.pageIndex;
+                    const lower = index * MAX_CHILDREN_COUNT;
+                    const higher = (index+1) * MAX_CHILDREN_COUNT;
+                    d.children = rawNodes.slice(lower, higher);
+                    if (lower !== 0) {
+                        d.children.unshift(d.savedChildren[0]);
+                    }
+                    if (higher < d.savedChildren.length) {
+                        d.children.push(d.savedChildren[d.savedChildren.length - 1])
+                    }
+                };
                 const data = d.data;
                 data.selected = !data.selected;
                 if (!data.selected) {
                     d.children = null;
                 } else {
                     d.children = d.savedChildren;
+                    if (d.isPaginationNeeded) {
+                        switchChildren(d)
+                    }
+                }
+                if (data.isHandle) {
+                    console.log('before', d.parent.children);
+                    if (data.value.includes(PREVIOUS_HANDLE_TOKEN)) {
+                        d.parent.pageIndex -= 1;
+                    } else {
+                        d.parent.pageIndex += 1;
+                    }
+                    switchChildren(d.parent);
+                    console.log('after', d.parent.children);
                 }
                 update(d);
             });
@@ -139,7 +187,7 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
             .attr("stroke-opacity", 0);
 
         const $links = $linksWrapper.selectAll("path")
-            .data(links);
+            .data(links, (item: any) => item.target.id);
         const $linksEnter = $links.enter()
             .append('path')
             .attr("fill", "none")

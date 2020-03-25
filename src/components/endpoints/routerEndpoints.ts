@@ -21,7 +21,15 @@ export const routerEndpoints = {
     },
     applications: {
         url: `/app`,
-        name: `Applications`
+        name: `Applications`,
+        edit: {
+            paramName: `name`,
+            urlBase: `/app/edit/`,
+            urlDynamic: `/app/edit/:name`,
+        },
+        create: {
+            url: `/app/create`
+        }
     },
     servers: {
         url: `/ad-servers`,
@@ -37,7 +45,12 @@ export const routerEndpoints = {
     },
     users: {
         url: `/ad-users`,
-        name: `Users`
+        name: `Users`,
+        edit: {
+            paramName: `name`,
+            urlBase: `/ad-users/edit/`,
+            urlDynamic: `/ad-users/edit/:name`
+        }
     },
     help: {
         url: `/help`,
@@ -45,5 +58,13 @@ export const routerEndpoints = {
     },
     invalid: {
         url: `/404`
+    },
+    translator: {
+        url: `/translate`,
+        name: `Translator`
+    },
+    profile: {
+        url: `/profile`,
+        name: `Profile`
     }
 };

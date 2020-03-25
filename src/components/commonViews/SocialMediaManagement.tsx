@@ -37,7 +37,6 @@ const tempData: SocialMediaSource[] = [
 ];
 
 export function SocialMediaManagement(props: SocialMediaProps) {
-    const {state} = useContext(globalStore);
     const [mediaSources, setMediaSources] = useState<SocialMediaSource[]>([]);
     const {updateTitle} = props;
     useEffect(() => {

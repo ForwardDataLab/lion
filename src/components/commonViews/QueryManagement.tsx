@@ -2,7 +2,7 @@ import React, {ReactNode, useEffect, useState} from "react";
 import {ViewCommonProps} from "../../types/props/ViewProps";
 import {QueryGeneral, QuerySchedule} from "../../models/Query";
 import {routerEndpoints} from "../endpoints/routerEndpoints";
-import {ServerRouteParams} from "../../types/props/ServerProps";
+import {RouteParams} from "../../types/props/ServerProps";
 import {Button, Snackbar} from "@material-ui/core";
 import {QueryList} from "./queries/QueryList";
 import {Redirect, useHistory, useParams} from "react-router-dom";
@@ -35,7 +35,7 @@ const fakeQueries: QueryGeneral[] = [
 export function QueryManagement(props: QueryProps) {
     const {updateTitle} = props;
     // const {state} = useContext(globalStore);
-    const selectedQueryName = useParams<ServerRouteParams>()[routerEndpoints.queries.history.paramName];
+    const selectedQueryName = useParams<RouteParams>()[routerEndpoints.users.edit.paramName];
     const [queries, setQueries] = useState<QueryGeneral[]>([]);
     const [alertMessage, setAlertMessage] = useState('');
     const history = useHistory();
@@ -86,11 +86,17 @@ export function QueryManagement(props: QueryProps) {
     };
 
     const onPerformDelete = (query: QueryGeneral) => {
-        onUpdateQueries({data: query, type: QueryUpdateType.DELETE}).then(() => history.replace(routerEndpoints.queries.url));
+        onUpdateQueries({
+            data: query,
+            type: QueryUpdateType.DELETE
+        }).then(() => history.replace(routerEndpoints.queries.url));
     };
     const onPerformAdd = (query: QueryGeneral) => onUpdateQueries({data: query, type: QueryUpdateType.ADD});
     const onPerformSubmit = (query: QueryGeneral) => {
-        onUpdateQueries({data: query, type: QueryUpdateType.UPDATE}).then(() => history.replace(routerEndpoints.queries.url));
+        onUpdateQueries({
+            data: query,
+            type: QueryUpdateType.UPDATE
+        }).then(() => history.replace(routerEndpoints.queries.url));
     };
     const onCloseSnackBar = () => setAlertMessage('');
 

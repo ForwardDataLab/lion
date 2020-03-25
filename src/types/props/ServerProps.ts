@@ -13,7 +13,7 @@ export interface ServerProps extends ViewCommonProps {
     routeType: ServerRouteType
 }
 
-export interface ServerRouteParams {
+export interface RouteParams {
     [index: string]: string
 }
 

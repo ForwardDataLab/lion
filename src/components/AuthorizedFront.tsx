@@ -13,7 +13,7 @@ import {
     useTheme
 } from "@material-ui/core";
 import clsx from "clsx";
-import {Explore, Help, Menu, People, Search, Share, Web} from "@material-ui/icons";
+import {Explore, Help, Menu, People, Search, Share, Translate, Web} from "@material-ui/icons";
 import {BrowserRouter as Router, NavLink, Redirect, Route, Switch} from "react-router-dom";
 import {routerEndpoints} from "./endpoints/routerEndpoints";
 import {QueryManagement, QueryRouteType} from "./commonViews/QueryManagement";
@@ -22,11 +22,12 @@ import {ApplicationsManagement} from "./commonViews/ApplicationsManagement";
 import React, {useContext, useState} from "react";
 import {appStyles} from "../styles/app";
 import {RouteProps} from "react-router";
-import {ServerManagement} from "./adminViews/servers/ServerManagement";
+import {ServerManagement} from "./adminViews/ServerManagement";
 import {UserManagement} from "./adminViews/UserManagement";
 import {globalStore} from "../store/globalState";
 import {NotFoundPage} from "./commonViews/NotFoundPage";
 import {ServerRouteType} from "../types/props/ServerProps";
+import {ProfilePage} from "./commonViews/ProfilePage";
 
 interface ExtendedRouteProps extends RouteProps {
     isAuthenticated: boolean
@@ -55,7 +56,7 @@ function PrivateRoute({isAuthenticated, children, ...rest}: ExtendedRouteProps) 
 
 export function AuthorizedFront() {
     const [title, setTitle] = useState(routerEndpoints.queries.name);
-    const [isOpen, toggleMenuOpen] = useState(false);
+    const [isOpen, toggleMenuOpen] = useState(true);
     const {state} = useContext(globalStore);
     const styles = appStyles();
     const theme = useTheme();
@@ -90,13 +91,16 @@ export function AuthorizedFront() {
                         classes={{paper: styles.drawerPaper}}
                         ModalProps={{keepMounted: true}}
                     >
-                        <ButtonBase>
-                            <div className={styles.nameCard}>
-                                <h2 className={styles.nameCardHeader}>Hello,</h2>
-                                <h2 className={styles.nameCardHeader}
-                                    style={{color: theme.palette.secondary.main}}>{user.userName}</h2>
-                            </div>
-                        </ButtonBase>
+                        <NavLink to={routerEndpoints.profile.url} key={routerEndpoints.profile.name}
+                                 className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                            <ButtonBase className={styles.nameCardWrapper}>
+                                <div className={styles.nameCard}>
+                                    <h2 className={styles.nameCardHeader}>Hello,</h2>
+                                    <h2 className={styles.nameCardHeader}
+                                        style={{color: theme.palette.secondary.main}}>{user.name}</h2>
+                                </div>
+                            </ButtonBase>
+                        </NavLink>
                         <Divider/>
                         <List>
                             <NavLink to={routerEndpoints.queries.url} key={routerEndpoints.queries.name}
@@ -138,6 +142,13 @@ export function AuthorizedFront() {
                                         <ListItemText primary={routerEndpoints.users.name}/>
                                     </ListItem>
                                 </NavLink>
+                                <NavLink to={routerEndpoints.translator.url} key={routerEndpoints.translator.name}
+                                         className={styles.linkNoStyle} activeClassName={styles.linkActiveStyle}>
+                                    <ListItem button>
+                                        <ListItemIcon><Translate/></ListItemIcon>
+                                        <ListItemText primary={routerEndpoints.translator.name}/>
+                                    </ListItem>
+                                </NavLink>
                             </List>
                         )}
                         <Divider/>
@@ -156,16 +167,32 @@ export function AuthorizedFront() {
                 <div className={clsx(styles.content, {[styles.contentShift]: isOpen})}>
                     <Switch>
                         <Route exact path={'/'}>
-                            <QueryManagement routeType={QueryRouteType.LIST} updateTitle={setTitle}/>
+                            <QueryManagement
+                                key={routerEndpoints.queries.url}
+                                routeType={QueryRouteType.LIST}
+                                updateTitle={setTitle}
+                            />
                         </Route>
                         <Route exact path={routerEndpoints.queries.url}>
-                            <QueryManagement routeType={QueryRouteType.LIST} updateTitle={setTitle}/>
+                            <QueryManagement
+                                key={routerEndpoints.queries.url}
+                                routeType={QueryRouteType.LIST}
+                                updateTitle={setTitle}
+                            />
                         </Route>
                         <Route exact path={routerEndpoints.queries.create.url}>
-                            <QueryManagement routeType={QueryRouteType.NEW} updateTitle={setTitle}/>
+                            <QueryManagement
+                                key={routerEndpoints.queries.create.url}
+                                routeType={QueryRouteType.NEW}
+                                updateTitle={setTitle}
+                            />
                         </Route>
                         <Route path={routerEndpoints.queries.history.urlDynamic}>
-                            <QueryManagement routeType={QueryRouteType.HISTORY} updateTitle={setTitle}/>
+                            <QueryManagement
+                                key={routerEndpoints.queries.history.urlDynamic}
+                                routeType={QueryRouteType.HISTORY}
+                                updateTitle={setTitle}
+                            />
                         </Route>
                         <Route exact path={routerEndpoints.socialMedia.url}>
                             <SocialMediaManagement updateTitle={setTitle}/>
@@ -173,17 +200,46 @@ export function AuthorizedFront() {
                         <Route exact path={routerEndpoints.applications.url}>
                             <ApplicationsManagement updateTitle={setTitle}/>
                         </Route>
+                        <Route path={routerEndpoints.profile.url}>
+                            <ProfilePage updateTitle={setTitle}/>
+                        </Route>
                         <PrivateRoute exact isAuthenticated={user.isAdmin} path={routerEndpoints.servers.url}>
-                            <ServerManagement routeType={ServerRouteType.LIST} updateTitle={setTitle}/>
+                            <ServerManagement
+                                // key={routerEndpoints.servers.url}
+                                routeType={ServerRouteType.LIST}
+                                updateTitle={setTitle}
+                            />
                         </PrivateRoute>
                         <PrivateRoute exact isAuthenticated={user.isAdmin} path={routerEndpoints.servers.create.url}>
-                            <ServerManagement routeType={ServerRouteType.NEW} updateTitle={setTitle}/>
+                            <ServerManagement
+                                // key={routerEndpoints.servers.create.url}
+                                routeType={ServerRouteType.NEW}
+                                updateTitle={setTitle}
+                            />
                         </PrivateRoute>
                         <PrivateRoute isAuthenticated={user.isAdmin} path={routerEndpoints.servers.edit.urlDynamic}>
-                            <ServerManagement routeType={ServerRouteType.EDIT} updateTitle={setTitle}/>
+                            <ServerManagement
+                                // key={routerEndpoints.servers.edit.urlDynamic}
+                                routeType={ServerRouteType.EDIT}
+                                updateTitle={setTitle}
+                            />
+                        </PrivateRoute>
+                        <PrivateRoute exact isAuthenticated={user.isAdmin} path={routerEndpoints.users.edit.urlDynamic}>
+                            <UserManagement
+                                // key={routerEndpoints.users.edit.urlDynamic}
+                                updateTitle={setTitle}
+                                isEdit={true}
+                            />
                         </PrivateRoute>
                         <PrivateRoute exact isAuthenticated={user.isAdmin} path={routerEndpoints.users.url}>
-                            <UserManagement updateTitle={setTitle}/>
+                            <UserManagement
+                                // key={routerEndpoints.users.url}
+                                updateTitle={setTitle}
+                                isEdit={false}
+                            />
+                        </PrivateRoute>
+                        <PrivateRoute exact isAuthenticated={user.isAdmin} path={routerEndpoints.translator.url}>
+                            <NotFoundPage/>
                         </PrivateRoute>
                         <Route><NotFoundPage/></Route>
                     </Switch>

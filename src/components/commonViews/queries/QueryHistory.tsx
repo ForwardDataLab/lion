@@ -4,6 +4,7 @@ import {queryHistoryStyles} from "../../../styles/queryStyle";
 import {Paper, Tab, Tabs} from "@material-ui/core";
 import {QueryRecordsPanel} from "./queryHistoryComponents/QueryRecordsPanel";
 import {QueryDetailPanel} from "./queryHistoryComponents/QueryDetailPanel";
+import clsx from "clsx";
 
 interface QueryHistoryProps {
     query: QueryGeneral,
@@ -24,8 +25,7 @@ function TabPanel(props: TabPanelProps) {
     const styles = queryHistoryStyles();
     return (
         <div
-            className={styles.intermediateWrapper}
-            hidden={value !== index}
+            className={clsx(styles.intermediateWrapper, value === index ? styles.showElement : styles.removeElement)}
             aria-labelledby={`scrollable-auto-tab-${index}`}
             {...other}
         >

@@ -1,19 +1,14 @@
 import React, {ReactNode, useEffect, useState} from "react";
-import {
-    ServerProps,
-    ServerRouteParams,
-    ServerRouteType,
-    ServerUpdateType
-} from "../../../types/props/ServerProps";
-import {ServerList} from "./ServerList";
-import {ServerEdit} from "./ServerEdit";
-import {routerEndpoints} from "../../endpoints/routerEndpoints";
+import {RouteParams, ServerProps, ServerRouteType, ServerUpdateType} from "../../types/props/ServerProps";
+import {ServerList} from "./servers/ServerList";
+import {ServerEdit} from "./servers/ServerEdit";
+import {routerEndpoints} from "../endpoints/routerEndpoints";
 import {useParams} from "react-router-dom";
 import {Button, Snackbar} from "@material-ui/core";
-import {Server} from "../../../models/Server";
-import {SnackBarTransition} from "../../utils/commonComponents";
-import {ServerUpdateRequest} from "../../../types/requests/serverRequests";
-import {ServerUpdateResponse} from "../../../types/responses/serverResponses";
+import {Server} from "../../models/Server";
+import {SnackBarTransition} from "../utils/commonComponents";
+import {ServerUpdateRequest} from "../../types/requests/serverRequests";
+import {ServerUpdateResponse} from "../../types/responses/serverResponses";
 
 const fakeServers: Server[] = [
     {
@@ -36,7 +31,7 @@ const fakeServers: Server[] = [
 
 export function ServerManagement(props: ServerProps) {
     const {updateTitle} = props;
-    const paramName = useParams<ServerRouteParams>()[routerEndpoints.servers.edit.paramName];
+    const paramName = useParams<RouteParams>()[routerEndpoints.servers.edit.paramName];
     const [servers, setServers] = useState([] as Server[]);
     const [alertMessage, setAlertMessage] = useState('');
     useEffect(() => {

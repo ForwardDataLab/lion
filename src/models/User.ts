@@ -1,6 +1,10 @@
 export interface User {
-    // todo: update model to reflect relationships
-    readonly userName: string,
+    readonly name: string,
     readonly isAdmin: boolean
 }
 
+export interface UserExtended extends User {
+    readonly email: string,
+    readonly quota: number
+    readonly usedQuota: number
+}

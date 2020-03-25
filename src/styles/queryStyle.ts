@@ -18,7 +18,7 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         padding: theme.spacing(2),
-        backgroundColor: `rgba(236,239,241,0.8)`,
+        backgroundColor: `rgba(236, 239, 241, 0.8)`,
         width: `100%`,
         minHeight: `100%`,
         boxSizing: `border-box`,
@@ -48,7 +48,7 @@ export const queryCreateStyles = makeStyles((theme: Theme) => ({
     },
     queryCreateInputPanel: {
         width: `240px`,
-        maxWidth:  `30%`,
+        maxWidth: `30%`,
         position: `absolute`,
         top: 0,
         bottom: 0,
@@ -91,7 +91,7 @@ export const queryHistoryStyles = makeStyles((theme: Theme) => createStyles({
         height: `100%`,
         display: `flex`,
         flexDirection: `column`,
-        overflowY: `hidden`
+        overflowY: `auto`
     },
     historyPanelWrapper: {
         height: `100%`,
@@ -166,5 +166,12 @@ export const queryHistoryStyles = makeStyles((theme: Theme) => createStyles({
         alignSelf: `stretch`,
         margin: `1rem 1.5rem`,
         border: `1px solid ${grey["100"]}`
+    },
+
+    removeElement: {
+        display: `none`
+    },
+    showElement: {
+        display: `block`
     }
 }));

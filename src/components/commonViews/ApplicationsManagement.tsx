@@ -10,5 +10,6 @@ export function ApplicationsManagement(props: ApplicationsProps) {
     useEffect(() => {
         updateTitle(routerEndpoints.applications.name);
     }, [updateTitle]);
+    
     return (<div/>);
 }

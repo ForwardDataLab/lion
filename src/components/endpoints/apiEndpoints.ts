@@ -4,13 +4,16 @@ import {ServerResponse, ServerUpdateResponse} from "../../types/responses/server
 import {ServerUpdateRequest} from "../../types/requests/serverRequests";
 import {SocialMediaResponse} from "../../types/responses/socialMediaResponses";
 import {
-    QueryListResponse,
     QueryFullSchemaResponse,
+    QueryHistoryRecordsResponse,
+    QueryListResponse,
+    QuerySelectedSchemaResponse,
     QuerySourcesListResponse,
-    QueryUpdateResponse, QuerySelectedSchemaResponse, QueryHistoryRecordsResponse
+    QueryUpdateResponse
 } from "../../types/responses/queryResponses";
 import {
-    QueryFullSchemaRequest, QueryHistoryRecordsRequest,
+    QueryFullSchemaRequest,
+    QueryHistoryRecordsRequest,
     QuerySelectedSchemaRequest,
     QueryUpdateRequest
 } from "../../types/requests/queryRequests";
@@ -36,7 +39,7 @@ interface APIEndpointsShape {
 }
 
 const APP_BASE_URL = `/app`;
-const getURL = (url: string) => APP_BASE_URL+'/api' + url;
+const getURL = (url: string) => APP_BASE_URL + '/api' + url;
 
 export const PageEndpoints = {
     projectMainPage: {

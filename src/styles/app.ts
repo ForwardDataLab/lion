@@ -54,6 +54,9 @@ export const appStyles = makeStyles((theme: Theme) => ({
         }),
         marginLeft: 0
     },
+    nameCardWrapper: {
+        width: `100%`
+    },
     nameCardHeader: {
         margin: '0 0',
         color: '#212121',

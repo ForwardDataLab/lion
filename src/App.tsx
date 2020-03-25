@@ -14,7 +14,7 @@ function App() {
         // todd: fetch data from localstorage here
         (async () => {
             console.log("App rendered");
-            dispatch({type: SET_USER, payload: {userName: 'Start from App', isAdmin: true}});
+            dispatch({type: SET_USER, payload: {name: 'Start from App', isAdmin: true}});
         })();
     }, [dispatch]);
     const isLoggedIn = state.user != null;

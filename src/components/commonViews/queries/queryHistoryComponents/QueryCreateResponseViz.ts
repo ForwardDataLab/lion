@@ -28,7 +28,7 @@ function createTree(obj: JSONObject): QueryResponseNode[] {
         const node: QueryResponseNode = {value: key, children: null, isHandle: false};
         if (Array.isArray(value)) {
             node.children = createTree(value.reduce((acc: any, cur: any, i) => {
-                acc[i+1] = cur;
+                acc[i + 1] = cur;
                 return acc;
             }, {}) as JSONObject);
         } else if (isObject(value)) {
@@ -128,7 +128,7 @@ export const createResponseViz = (props: QueryCreateResponseVizProps) => {
                     const rawNodes = d.savedChildren.slice(1, -1);
                     const index = d.pageIndex;
                     const lower = index * MAX_CHILDREN_COUNT;
-                    const higher = (index+1) * MAX_CHILDREN_COUNT;
+                    const higher = (index + 1) * MAX_CHILDREN_COUNT;
                     d.children = rawNodes.slice(lower, higher);
                     if (lower !== 0) {
                         d.children.unshift(d.savedChildren[0]);

@@ -4,7 +4,8 @@ export interface QueryFullSchemaRequest {
     source: string
 }
 
-export interface QuerySelectedSchemaRequest extends QueryFullSchemaRequest {}
+export interface QuerySelectedSchemaRequest extends QueryFullSchemaRequest {
+}
 
 export enum QueryUpdateType {
     ADD, DELETE, UPDATE

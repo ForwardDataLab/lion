@@ -16,6 +16,7 @@ interface ContextProps {
 }
 
 export const SET_USER = 'SET_USER';
+export const REMOVE_USER = 'REMOVE_USER';
 export const globalStore = createContext<ContextProps>({
     state: {user: null}, dispatch: () => {
     }
@@ -27,6 +28,10 @@ const reducer = (state: State, action: Action) => {
             return {
                 ...state,
                 user: action.payload
+            };
+        case REMOVE_USER:
+            return {
+                user: null
             };
         default:
             throw new Error();

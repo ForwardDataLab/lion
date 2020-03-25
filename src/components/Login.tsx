@@ -45,7 +45,7 @@ export function Login() {
                 // todo: handle post responses
                 console.error(e)
             }
-            dispatch({type: SET_USER, payload: {userName: 'MockUser', isAdmin: true}});
+            dispatch({type: SET_USER, payload: {name: 'MockUser', isAdmin: true}});
         }
     };
 

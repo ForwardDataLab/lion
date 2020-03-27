@@ -200,6 +200,12 @@ export function AuthorizedFront() {
                         <Route exact path={routerEndpoints.applications.url}>
                             <ApplicationsManagement updateTitle={setTitle}/>
                         </Route>
+                        <Route exact path={routerEndpoints.applications.create.url}>
+                            <ApplicationsManagement updateTitle={setTitle}/>
+                        </Route>
+                        <Route exact path={routerEndpoints.applications.edit.urlDynamic}>
+                            <ApplicationsManagement updateTitle={setTitle}/>
+                        </Route>
                         <Route path={routerEndpoints.profile.url}>
                             <ProfilePage updateTitle={setTitle}/>
                         </Route>

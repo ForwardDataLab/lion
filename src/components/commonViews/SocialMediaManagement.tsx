@@ -1,5 +1,4 @@
-import React, {Fragment, useCallback, useContext, useEffect, useState} from "react";
-import {globalStore} from "../../store/globalState";
+import React, {Fragment, useCallback, useEffect, useState} from "react";
 import {SocialMediaSource} from "../../models/SocialMediaSource";
 import {socialMediaStyles} from "../../styles/socialMediaStyle";
 import {Button, List, ListItem, ListItemText} from "@material-ui/core";

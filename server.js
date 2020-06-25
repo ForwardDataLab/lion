@@ -53,8 +53,10 @@ app.use(session({
 
 app.all('*', checkUser);
 
+const mongo_db = process.env.NODE_ENV == "test" ? process.env.TEST_MONGODB:process.env.DEFAULT_MONGODB
+
 client.connect(async () => {
-  const db = client.db('listenonline');
+  const db = client.db(mongo_db);
 
   try {
     const counter = await db.collection('counters').findOne({ _id: 'server_id' });
@@ -445,9 +447,12 @@ app.use((error, _req, res, next) => {
   res.send(makeGeneralError([error.message]));
 });
 
-const server = app.listen(3000, () => {
-  const host = server.address().address;
-  const { port } = server.address();
+const p =process.env.NODE_ENV === 'test' ? 3010:3000;
+const server = app.listen(p, () => {
+    // const host = server.address().address;
+  const host = process.env.NODE_ENV === 'test' ? "localhost" : server.address().address;
+  const { port } = process.env.NODE_ENV === 'test' ? 3010 : server.address();
+
 
   console.log('Example app listening at http://%s:%s', host, port);
 });

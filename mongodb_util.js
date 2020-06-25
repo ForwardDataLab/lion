@@ -1,5 +1,7 @@
 const { MongoClient } = require('mongodb');
 const jsonSize = require('json-size');
+const mongo_db = process.env.NODE_ENV == "test" ? process.env.TEST_MONGODB:process.env.DEFAULT_MONGODB
+
 
 module.exports = {
   getNextSequenceValue: async (sequenceName, db) => {
@@ -21,5 +23,5 @@ module.exports = {
     return jsonSize(queries) / (1024 * 1024);
   },
 
-  client: new MongoClient('mongodb://localhost:27017/listenonline'),
+  client: new MongoClient('mongodb://localhost:27017/'+mongo_db),
 };

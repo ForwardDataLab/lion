@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
     "dev": "nodemon server.js",
     "prod": "NODE_ENV=production node server",
-    "init": "node init_db"
+    "init": "node init_db",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
+    "pretest": "cross-env NODE_ENV=test"
   },
   "author": "",
   "license": "ISC",

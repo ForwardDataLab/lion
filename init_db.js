@@ -5,11 +5,13 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcryptjs');
 const { query } = require('./sql');
 const { client } = require('./mongodb_util');
+const mongo_db = process.env.NODE_ENV == "test" ? process.env.TEST_MONGODB:process.env.DEFAULT_MONGODB
+
 
 const init = async () => {
   client.connect(async () => {
     try {
-      const db = client.db('listenonline');
+      const db = client.db(mongo_db);
 
       await db.collection('file_system').insertOne({
         file_system: [{

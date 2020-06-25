@@ -1,11 +1,23 @@
 const mysql = require('mysql');
 const util = require('util');
 
+let host =  process.env.DB_HOST;
+let user =  process.env.DB_USERNAME;
+let password = process.env.DB_PASSWORD;
+let database = process.env.DB_DATABASE;
+
+if(process.env.NODE_ENV == 'test'){
+  host =  process.env.TEST_DB_HOST;
+  user =  process.env.TEST_DB_USERNAME;
+  password = process.env.TEST_DB_PASSWORD;
+  database = process.env.TEST_DB_DATABASE;
+}
+
 const con = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+  host: host,
+  user: user,
+  password: password,
+  database: database,
 });
 
 con.connect((err) => {

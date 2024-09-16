@@ -1,0 +1,21 @@
+{
+  "name": "translator-validation-oas",
+  "version": "1.0.2",
+  "description": "",
+  "main": "src/rules.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^8.6.1",
+    "compile-template": "^0.3.1",
+    "fs": "0.0.1-security",
+    "ibm-openapi-validator": "^0.46.1",
+    "json-pointer": "^0.6.1",
+    "json-schema-generator": "^2.0.6",
+    "jsonpath": "^1.1.1",
+    "oas-validator-lxwang2": "^4.0.3"
+  }
+}

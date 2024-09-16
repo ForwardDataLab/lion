@@ -17,6 +17,7 @@ const socketio = require('socket.io');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
+var jp = require('jsonpath');
 const { CronJob } = require('cron');
 const expressMongoDb = require('express-mongo-db');
 const { introspectionQuery } = require('graphql');
@@ -28,6 +29,7 @@ const { executeQuery } = require('./graphql_util');
 const { query } = require('./sql');
 const authController = require('./lib/auth.controller');
 const passportInit = require('./lib/passport.init');
+const rules = require('./translator-validation-oas')
 const {
   makeGeneralError, makeSuccess, checkUser, getCronPattern, insertNewFolder, insertNewSwaggerFile, insertNewTranslationFile,
 } = require('./util');
@@ -361,6 +363,48 @@ app.get('/app/api/query/history-records', asyncHandler(async (req, res) => {
   res.send(makeSuccess(history));
 }));
 
+// Load rules from database
+app.get('/app/api/validate/history-rules', asyncHandler(async (req, res) => {
+
+  const history = await req.db.collection('validation_rules').find({}).toArray();
+  console.log("Returning rules",history);
+  res.send(makeSuccess(history));
+}));
+
+// Create or Update existing rule
+app.put('/app/api/validate/create', asyncHandler(async (req, res) => {
+  const { type,data } = req.body;
+
+  if (type==2){
+    await req.db.collection('validation_rules').insertOne(data);
+  }
+  else {
+    await req.db.collection('validation_rules').updateOne({ rule_name: data.rule_name },
+        { $set: {"rule_desc":data.rule_desc,
+        "rule_function":data.rule_function,
+        "rule_parameters":data.rule_parameters,
+        "rule_path":data.rule_path,
+        "rule_action": data.rule_action,
+        "rule_error_msg": data.rule_error_msg,
+        "rule_level": data.rule_level,
+        "rule_custom_code": data.rule_custom_code} });
+  }
+
+  console.log("Creating Rule",data);
+
+  res.send(makeSuccess(data));
+
+
+}));
+
+
+// Delete existing rule
+app.put('/app/api/validate/delete', asyncHandler(async (req, res) => {
+  const { type,data } = req.body;
+  await req.db.collection('validation_rules').remove({ rule_name: data.rule_name });
+  res.send(makeSuccess(data));
+
+  }));
 
 app.get('/app/api/users', asyncHandler(async (req, res) => {
   const users = await query('SELECT name, isAdmin, email, quota, id FROM users WHERE id <> ?', [199]);
@@ -416,67 +460,125 @@ app.put('/app/api/application/update', validator.applicationValidationRules(), v
   res.send(makeSuccess(data));
 }));
 
-/* Translation tool endpoint */
-app.get('/app/api/translation-tool/files', asyncHandler(async (req, res) => {
-  const fileSystem = (await req.db.collection('file_system').findOne({})).file_system;
-  res.send(makeSuccess(fileSystem));
+// Create or Update  Translation State and save to db
+app.put('/app/api/translate/create', asyncHandler(async (req, res) => {
+  const {type,data } = req.body;
+  if (type==0){
+    await req.db.collection('translation_files').insertOne(data);
+  }
+  else {
+    await req.db.collection('translation_files').updateOne({ translationName: data.translationName },
+        { $set: {"checked":data.checked,
+        "nodes":data.nodes,
+        "translationDesc":data.translationDesc,
+        "translationFile":data.translationFile,
+        "newSwagger": data.newswagger,
+        "checked": data.checked,
+        "expanded": data.expanded} });
+  }
+
+  // await req.db.collection('translation_files').deleteMany({});
+
+  console.log("Creating translation",data);
+
+  res.send(makeSuccess(data));
+
 }));
 
-app.post('/app/api/translation-tool/folder', asyncHandler(async (req, res) => {
-  const { location, folderName } = req.body.data;
-  insertNewFolder(location, folderName, req);
+// Delete existing translation state
+app.put('/app/api/translate/delete', asyncHandler(async (req, res) => {
+  const { type,data } = req.body;
+  await req.db.collection('translation_files').remove({ translationName: data.translationName });
+  console.log(data.translationName);
+  res.send(makeSuccess(data));
 
-  res.send(makeSuccess('Successfully Inserted New Folder'));
-}));
+  }));
 
-// app.get('/app/api/translation-tool/swagger_files', asyncHandler(async (req, res) => {
-//   const swaggerFiles = await req.db.collection('swagger_files').find({}, { _id: 0, slug: 1 }).toArray();
-//   res.send(makeSuccess(swaggerFiles.map((swaggerFile) => swaggerFile.slug)));
+// Deployment: Use the following command to export rules from database
+// sudo mongoexport --db listenonline -c validation_rules --out validation_rules.json
+
+// Validate translation state by loading all rules from database and calling validation framework
+app.put('/app/api/translate/validate', asyncHandler(async (req, res) => {
+  const { type,data } = req.body;
+
+  console.log("New Validate Call");
+
+  const history = await req.db.collection('validation_rules').find({}).toArray();
+  var rule_len= history.length;
+  var actionMsg= [];
+  var dbrules = [];
+
+  for (var i = 0; i < rule_len; i++) {
+
+  var rule= {
+    "id": history[i].rule_name,
+    "functionName": history[i].rule_function,
+    "path": history[i].rule_path,
+    "ruledesc": history[i].rule_desc,
+    "level": history[i].rule_level,
+    "errmsg": history[i].rule_error_msg,
+    "code": history[i].rule_custom_code,
+  };
+
+  // parameters in rule form are split on delimeter "|"
+  const parametArr = history[i].rule_parameters.split("|");
+
+  const parametArrLen= parametArr.length;
+
+  // split parameter and their values using delimeter ":"
+  for (var k = 0; k < parametArrLen; k++) {
+    var fieldname= parametArr[k].split(":")[0];
+    var values= parametArr[k].split(":")[1];
+    rule[fieldname]= values;
+  }
+  dbrules.push(rule);
+  }
+
+  // Call validation tool using rules and send the error list as response
+  var err= await rules.rules(data.swaggerFile, data.newSwagger,dbrules);
+  console.log("Err",err);
+  res.send(makeSuccess(err));
+
+  }));
+
+// app.put('/app/api/translate/update', asyncHandler(async (req, res) => {
+//   const {type,data } = req.body;
+//
+//   // await req.db.collection('translation_files').insertOne(data);
+//
+//   await req.db.collection('translation_files').updateOne({ translationName: data.translationName },
+//     { $set: {"checked":data.checked,"nodes":data.nodes,"translationDesc":data.translationDesc} });
+//
+//   // await req.db.collection('translation_files').deleteMany({});
+//
+//   console.log("Creating translation",data);
+//
+//   res.send(makeSuccess(data));
+//
 // }));
 
-app.get('/app/api/translation-tool/swagger', asyncHandler(async (req, res) => {
-  const { name } = req.query;
-  const { swagger } = await req.db.collection('swagger_files').findOne({ name });
-  res.send(makeSuccess(swaggerFile));
+
+
+// app.put('/app/api/translate/delete', asyncHandler(async (req, res) => {
+//   // const {type,data } = req.body;
+//
+//   const { type,data } = req.body;
+//   await req.db.collection('translation_files').remove({ translation_name: data.translation_name });
+//   //
+//   // await req.db.collection('translation_files').deleteMany({});
+//
+//   // console.log("Deleting All data");
+//
+//
+// }));
+
+
+app.get('/app/api/translate/history-translations', asyncHandler(async (req, res) => {
+  const history = await req.db.collection('translation_files').find({}).toArray();
+  console.log("Returning translations",history);
+  res.send(makeSuccess(history));
 }));
 
-app.post('/app/api/translation-tool/swagger', asyncHandler(async (req, res) => {
-  const { swaggerName, swagger, location } = req.body.data;
-
-  insertNewSwaggerFile(swaggerName, swagger, location, 'swagger_files', req);
-
-  res.send(makeSuccess('Successfully Inserted Swagger File'));
-}));
-
-app.delete('/app/api/translation-tool/swagger', asyncHandler(async (req, res) => {
-  // TODO
-}));
-
-app.get('/app/api/translation-tool/translation', asyncHandler(async (req, res) => {
-  const { name } = req.body.data;
-
-  const { translationFile } = await req.db.collection('translation_files').findOne({ name });
-
-  res.send(makeSuccess(translationFile));
-}));
-
-app.post('/app/api/translation-tool/translation', asyncHandler(async (req, res) => {
-  const {
-    translation, translationName, swaggerName, location,
-  } = req.body.data;
-
-  insertNewTranslationFile(translationName, translation, location, swaggerName, req);
-
-  res.send(makeSuccess('Successfully Inserted Translation File'));
-}));
-
-app.delete('/app/api/translation-tool/translation', asyncHandler(async (req, res) => {
-  // TODO
-}));
-
-app.put('/app/api/translation-tool/translation', asyncHandler(async (req, res) => {
-  // TODO
-}));
 
 if (process.env.NODE_ENV === 'production') {
   app.get(['/app', '/app/*'], (req, res) => {
